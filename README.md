@@ -1,6 +1,9 @@
-# Getting Started with Create React App
+# Dashboard for PoCs and Demos
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## Build Status
+[![Netlify Status](https://api.netlify.com/api/v1/badges/9dc98a57-1827-4c4a-9c03-b714e18933f1/deploy-status)](https://demos-pocs-dashboard.netlify.app/)
 
 ## Available Scripts
 
