@@ -46,10 +46,10 @@ const Home = () => {
         templateColumns={{ base: '1fr', large: '1fr 1fr 1fr' }}
         gap={tokens.space.small}
       >
+        <DummyCard title="Ammplify Filter Feeds" url="/amplify-filter-feeds" />
         <DummyCard title="One" url="/one" />
         <DummyCard title="Two" url="/two" />
         <DummyCard title="Three" url="/three" />
-        <DummyCard title="Four" url="/four" />
         <DummyCard title="Five" url="/five" />
         <DummyCard title="Six" url="/six" />
         <DummyCard title="Seven" url="/seven" />
