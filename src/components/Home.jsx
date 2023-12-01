@@ -3,8 +3,9 @@ import viteLogo from "../assets/vite.svg";
 import { Link } from "react-router-dom";
 import { dataList } from './../assets/dummy.js';
 import { Collection, Image, Divider, View, Badge, Flex, Heading, Button, Text, Card, useTheme, Grid } from "@aws-amplify/ui-react";
+import ProjectList from "./ProjectList.jsx";
 
-const DummyCard = ({ index, title, url, description, services, tags,id }) => {
+export const DummyCard = ({ index, title, url, description, services, tags,id }) => {
   return (
     <Card
       key={index}
@@ -73,9 +74,10 @@ const Home = () => {
         }
       >
         {(item, index) => (
-          <DummyCard index={index} title={item.title} services={item.services_used} tags={item.tags} url={item.demourl} description={item.description} id={item.id}/>
+          <DummyCard  key={item.id} index={index} title={item.title} services={item.services_used} tags={item.tags} url={item.demourl} description={item.description} id={item.id}/>
         )}
       </Collection>
+      <ProjectList />
     </>
   );
 };
