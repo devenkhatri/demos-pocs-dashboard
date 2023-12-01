@@ -1,26 +1,37 @@
 import reactLogo from "../assets/react.svg";
 import viteLogo from "../assets/vite.svg";
 import { Link } from "react-router-dom";
-import { Flex, Heading, Button, Text, Card, useTheme, Grid } from "@aws-amplify/ui-react";
+import { dataList } from './../assets/dummy.js';
+import { Collection, Image, Divider, View, Badge, Flex, Heading, Button, Text, Card, useTheme, Grid } from "@aws-amplify/ui-react";
 
-const DummyCard = ({ title, url }) => {
+const DummyCard = ({ index, title, url, description, services, tags,id }) => {
   return (
-    <Card variation="elevated">
+    <Card
+      key={index}
+      borderRadius="medium"
+      width="100%"
+      variation="elevated"
+    >
       <Flex
         direction={{ base: "column", large: "row" }}
-        // maxWidth="22rem"
-        padding="1rem"
+        padding="0.5rem"
         width="100%"
       >
-        <Flex justifyContent="space-between" direction="column">
+        <Flex justifyContent="space-between" direction="column" width="100%">
           <Heading level={3}>{title}</Heading>
+          <Flex justifyContent="center">
+            {tags.map((badge) =>
+              <Badge
+                size="small"
+                variation="info">
+                {badge}
+              </Badge>
+            )}
+          </Flex>
           <Text>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Volutpat
-            sed cras ornare arcu dui. Duis aute irure dolor in reprehenderit in
-            voluptate velit esse.
+            {description}
           </Text>
-          <Button variation="primary" onClick={() => (location.href = url)}>
+          <Button variation="primary" onClick={() => (location.href = "project-details/"+id)}>
             Visit Project
           </Button>
         </Flex>
@@ -42,19 +53,29 @@ const Home = () => {
         />
         <Heading level={1} >Dashboard</Heading>
       </Flex>
-      <Grid
-        templateColumns={{ base: '1fr', large: '1fr 1fr 1fr' }}
-        gap={tokens.space.small}
+      <Collection
+        items={dataList}
+        type="grid"
+        templateColumns="1fr 1fr 1fr"
+        direction="row"
+        gap="20px"
+        wrap="nowrap"
+        width={"100%"}
+        marginTop={"2rem"}
+        isSearchable
+        searchPlaceholder="Type to search..."
+        searchFilter={(listItem, keyword) =>
+          listItem?.title?.toLowerCase().includes(keyword.toLowerCase())  ||
+          listItem?.description?.toLowerCase().includes(keyword.toLowerCase()) || 
+          listItem?.tags?.toString().toLowerCase().includes(keyword.toLowerCase()) || 
+          listItem?.services_used?.toString().toLowerCase().includes(keyword.toLowerCase())||
+          listItem?.demourl?.toLowerCase().includes(keyword.toLowerCase())
+        }
       >
-        <DummyCard title="Ammplify Filter Feeds" url="/amplify-filter-feeds" />
-        <DummyCard title="One" url="/one" />
-        <DummyCard title="Two" url="/two" />
-        <DummyCard title="Three" url="/three" />
-        <DummyCard title="Five" url="/five" />
-        <DummyCard title="Six" url="/six" />
-        <DummyCard title="Seven" url="/seven" />
-        <DummyCard title="Eight" url="/eight" />
-      </Grid>
+        {(item, index) => (
+          <DummyCard index={index} title={item.title} services={item.services_used} tags={item.tags} url={item.demourl} description={item.description} id={item.id}/>
+        )}
+      </Collection>
     </>
   );
 };

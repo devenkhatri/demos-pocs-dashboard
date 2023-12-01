@@ -4,9 +4,8 @@ import { View } from "@aws-amplify/ui-react";
 
 const Layout = ({ signOut, user }) => {
   return (
-    <View as="div">
-      <h1>Hello {user?.username}</h1>
-      <button onClick={signOut}>Sign out</button>
+    <View className="main_container">
+      
       <Outlet />
       <Fab />
     </View>
