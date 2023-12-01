@@ -6,4 +6,3 @@ or
 
 https://congenial-space-guide-7g47xxq97xcr676-5174.app.github.dev/
 
-Narendra is available

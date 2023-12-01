@@ -27,7 +27,7 @@ const AmplifyFilterFeeds = () => {
   };
   const { tokens } = useTheme();
   return (
-    <Card variation="elevated" style={{ width: "100vh" }}>
+    <Card variation="elevated" style={{ margin: "0 auto" ,width: "100vh"}}>
       <Grid
         columnGap="0.5rem"
         rowGap="0.5rem"

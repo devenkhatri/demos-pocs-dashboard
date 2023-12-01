@@ -16,8 +16,6 @@ const Header = ({ signOut, user }) => {
             <Link href="/" className="logo">
                 <Image src={brandLogo} height={"58px"}/>
             </Link>
-            {/* <Input className="menu-btn" type="checkbox" id="menu-btn" />
-            <Label className="menu-icon" for="menu-btn"><span className="navicon"></span></Label> */}
             <View className="menu">
                 <Text className="menu-item user-text">Welcome, {user?.username}</Text>
                 <Text className="menu-item home-text" ><Link href="/" className="home-link"><FaHome /></Link></Text>

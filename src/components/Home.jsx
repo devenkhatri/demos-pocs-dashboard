@@ -19,7 +19,7 @@ export const DummyCard = ({ index, title, url, description, services, tags,id })
         width="100%"
       >
         <Flex justifyContent="space-between" direction="column" width="100%">
-          <Heading level={3}>{title}</Heading>
+          <Heading style={{"wordBreak": "break-all"}} level={3}>{title}</Heading>
           <Flex justifyContent="center">
             {tags.map((badge) =>
               <Badge
@@ -45,7 +45,7 @@ const Home = () => {
   const { tokens } = useTheme();
   return (
     <>
-      <Flex justifyContent="center">
+      {/* <Flex justifyContent="center">
         <img
           src={viteLogo}
           className="logo"
@@ -76,7 +76,7 @@ const Home = () => {
         {(item, index) => (
           <DummyCard  key={item.id} index={index} title={item.title} services={item.services_used} tags={item.tags} url={item.demourl} description={item.description} id={item.id}/>
         )}
-      </Collection>
+      </Collection> */}
       <ProjectList />
     </>
   );
