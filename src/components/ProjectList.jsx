@@ -40,6 +40,8 @@ const ProjectList = () => {
         width={"100%"}
         marginTop={"2rem"}
         isSearchable
+        isPaginated
+        itemsPerPage={15}
         searchPlaceholder="Type to search..."
         searchFilter={(listItem, keyword) =>
           listItem?.title?.toLowerCase().includes(keyword.toLowerCase())  ||
