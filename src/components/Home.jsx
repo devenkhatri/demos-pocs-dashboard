@@ -5,7 +5,7 @@ import { dataList } from './../assets/dummy.js';
 import { Collection, Image, Divider, View, Badge, Flex, Heading, Button, Text, Card, useTheme, Grid } from "@aws-amplify/ui-react";
 import ProjectList from "./ProjectList.jsx";
 
-export const DummyCard = ({ index, title, url, description, services, tags,id }) => {
+export const DummyCard = ({ index, title, url, description, services, tags, id, updtedDate }) => {
   return (
     <Card
       key={index}
@@ -17,9 +17,10 @@ export const DummyCard = ({ index, title, url, description, services, tags,id })
         direction={{ base: "column", large: "row" }}
         padding="0.5rem"
         width="100%"
+        height="100%"
       >
-        <Flex justifyContent="space-between" direction="column" width="100%">
-          <Heading style={{"wordBreak": "break-all"}} level={3}>{title}</Heading>
+        <Flex justifyContent="space-around" direction="column" width="100%">
+          <Heading style={{"wordBreak": "break-word"}} level={3}>{title}</Heading>
           <Flex justifyContent="center">
             {tags.map((badge) =>
               <Badge
@@ -32,7 +33,10 @@ export const DummyCard = ({ index, title, url, description, services, tags,id })
           <Text>
             {description}
           </Text>
-          <Button variation="primary" onClick={() => (location.href = "project-details/"+id)}>
+          <Text>
+            {updtedDate}
+          </Text>
+          <Button variation="primary" style={{"marginTop": "auto"}} onClick={() => (location.href = "project-details/"+id)}>
             Visit Project
           </Button>
         </Flex>

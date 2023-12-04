@@ -13,21 +13,25 @@ import config from './amplifyconfiguration.json';
 import ProjectDetails from "./components/ProjectDetails";
 import Header from './components/Header';
 import Footer from './components/Footer';
+import AdminProjectList from './components/admin/AdminProjectList'
 Amplify.configure(config);
 
-function App({ signOut, user }) {
+function App( {user }) {
   return (
     <ThemeProvider>
-      <Header signOut={signOut} user={user} />
+      <Header  user={user} />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Layout signOut={signOut} user={user} />}>
+          <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="one" element={<App1 title="One" />} />
             <Route path="two" element={<App1 title="Two" />} />
             <Route path="amplify-filter-feeds" element={<AmplifyFilterFeeds />} />
             <Route path="project-details/:id" element={<ProjectDetails />}/>
+            <Route path="rxc345" element={<AdminProjectList />}/>
+
             <Route path="*" element={<NoPage />} />
+
           </Route>
         </Routes>
       </BrowserRouter>

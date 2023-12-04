@@ -1,6 +1,7 @@
 import { Image, MenuItem, Menu, Divider, View, Flex, Text, Link, Icon, Input, Label, CheckboxField, useTheme, Button } from "@aws-amplify/ui-react";
 import brandLogo from "../assets/tcs_logo.png";
 import { FaHome, FaPowerOff } from "react-icons/fa";
+import { signOut } from 'aws-amplify/auth';
 const IconSave = () => {
     return (
         <Icon
@@ -9,7 +10,15 @@ const IconSave = () => {
         />
     );
 };
-const Header = ({ signOut, user }) => {
+
+async function handleSignOut() {
+    try {
+      await signOut({ global: true });
+    } catch (error) {
+      console.log('error signing out: ', error);
+    }
+  }
+const Header = ({ user }) => {
     const { tokens } = useTheme();
     return (
         <View className="header">
@@ -19,7 +28,7 @@ const Header = ({ signOut, user }) => {
             <View className="menu">
                 <Text className="menu-item user-text">Welcome, {user?.username}</Text>
                 <Text className="menu-item home-text" ><Link href="/" className="home-link"><FaHome /></Link></Text>
-                <Button variation="link" className="cus_signout_btn" >
+                <Button variation="link" className="cus_signout_btn" onClick={handleSignOut}>
                     <FaPowerOff />
                 </Button>
             </View>

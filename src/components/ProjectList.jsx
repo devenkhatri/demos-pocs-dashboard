@@ -3,11 +3,13 @@ import { generateClient } from 'aws-amplify/api';
 import * as queries from '../graphql/queries';
 import React, { useEffect } from 'react';
 import { DummyCard } from './Home';
-import { Collection, Image, Divider, View, Badge, Flex, Heading, Button, Text, Card, useTheme, Grid } from "@aws-amplify/ui-react";
+import _ from "lodash";
+import { Collection,Loader, Image, Divider, View, Badge, Flex, Heading, Button, Text, Card, useTheme, Grid } from "@aws-amplify/ui-react";
 
 const ProjectList = () => {
   const client = generateClient();
   const [data, setData] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
 
   const getAllProjects = async () => {
     const allProjects = await client.graphql({
@@ -17,12 +19,16 @@ const ProjectList = () => {
           isdisabled: {
             ne: true
           }
-        },
-        sort: { direction: "desc", field: "updatedAt" }
+        }
       }
     });
     console.log("******** allProjects....", allProjects);
-    if (allProjects && allProjects.data && allProjects.data.listProjects) setData(allProjects.data.listProjects.items);
+    setLoading(false)
+    if (allProjects?.data?.listProjects?.items) {
+      const filteredData = _.orderBy(allProjects.data.listProjects.items, ['updatedAt'], ['desc']);
+      console.log("filteredData >", filteredData)
+      setData(filteredData);
+    }
   }
 
 
@@ -46,6 +52,19 @@ const ProjectList = () => {
         marginTop={"2rem"}
         isSearchable
         isPaginated
+        searchNoResultsFound={
+          !loading? 
+            <Flex justifyContent="center">
+              <Text color="purple.80" fontSize="1rem">
+                Nothing found, please try again
+              </Text>
+            </Flex>
+            : <Flex justifyContent="center">
+              <Flex  direction="column" alignItems="center">
+                  <Loader size="large"  width="5rem" height="5rem"/>
+              </Flex>
+          </Flex>
+        }
         itemsPerPage={15}
         searchPlaceholder="Type to search..."
         searchFilter={(listItem, keyword) =>
@@ -57,7 +76,7 @@ const ProjectList = () => {
         }
       >
         {(item, index) => (
-          <DummyCard key={item.id} index={index} title={item.title} services={item.services_used} tags={item.tags} url={item.demourl} description={item.description} id={item.id} />
+          <DummyCard key={item.id} index={index} title={item.title} services={item.services_used} tags={item.tags} url={item.demourl} description={item.description} id={item.id} updtedDate={item.updatedAt}/>
         )}
       </Collection>
     </React.Fragment>
