@@ -4,8 +4,9 @@ import { Badge, Flex, Heading, Button, Text, Card, View, Divider } from "@aws-am
 import { FaArrowRight } from "react-icons/fa";
 
 
-export const ProjectCard = ({ index, title, url, description, services, tags, id, updtedDate }) => {
+export const ProjectCard = ({ index, title, url, description, services, tags, id, updtedDate, searchItems }) => {
   //var date = updtedDate
+  searchItems.push(index);
   return (
     <Card
       key={index}

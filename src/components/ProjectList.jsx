@@ -11,7 +11,9 @@ const ProjectList = () => {
   const client = generateClient();
   const [data, setData] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
-  const [searchItems,setSearchItems] = React.useState([]);
+  const [searchItems, setSearchItems] = React.useState([]);
+  
+  console.log("Search ====", searchItems);
 
   const getAllProjects = async () => {
     const allProjects = await client.graphql({
@@ -80,7 +82,7 @@ const ProjectList = () => {
         }
       >
         {(item, index) => (
-          <ProjectCard key={item.id} index={index} title={item.title} services={item.services_used} tags={item.tags} url={item.demourl} description={item.description} id={item.id} updtedDate={item.updatedAt} setSearchItems={setSearchItems} />
+          <ProjectCard key={item.id} index={index} title={item.title} services={item.services_used} tags={item.tags} url={item.demourl} description={item.description} id={item.id} updtedDate={item.updatedAt} searchItems={searchItems} />
         )}
       </Collection>
     </React.Fragment>
