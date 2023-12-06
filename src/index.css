@@ -69,7 +69,7 @@ button:focus-visible {
 }
 
 .main_container{
-  margin-top: 80px;
+  margin-top: 100px;
   margin-bottom: 60px;
 }
 /* Responsive menu - starts */
@@ -82,7 +82,7 @@ button:focus-visible {
   top: 0;
   left: 0;
   right: 0;
-  padding: 0 3rem;
+  padding: 0 6rem;
 }
 
 .header .menu {
@@ -227,11 +227,11 @@ button:focus-visible {
 /* Responsive menu - ends */
 /* Footer css - starts */
 .footer {
-  width: 105%;
+  width: 116.63%;
   z-index: 3;
   background-color: #000;
   color: #fff;
-  margin: 0 -2rem;
+  margin: 0 -6rem;
   border-width:0px;
   min-height: 60px;
   line-height: 60px;
@@ -262,6 +262,33 @@ button:focus-visible {
   .footer {
     width: auto;
   }
+  .custom_main_collection .amplify-collection-items{
+    grid-template-columns: 1fr !important;
+  }
 }
 
 /* Footer css - ends */
+
+.custom_date{
+  color: #9b9696;
+  font-size: 13px;
+  margin-bottom:8px;
+}
+.custom_visti_project_btn, .custom_visti_project_btn:active, .custom_visti_project_btn:focus{
+  background: none !important;
+  border:none !important;
+  outline:none !important;
+  box-shadow:none !important;
+}
+.custom_visti_project_btn{
+  margin-left:auto;
+  margin-top:auto;
+  color: #000;
+  font-size: 16px;
+  font-weight: 500;
+  transition: transform .3s
+}
+.custom_visti_project_btn:hover{
+  transform: scale(1.1);
+}
+
