@@ -258,6 +258,7 @@ button:focus-visible {
   }
   .main_container {
     margin-top: 120px;
+    padding: 0 1rem;
   }
   .footer {
     width: auto;

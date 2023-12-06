@@ -27,34 +27,32 @@ const AmplifyFilterFeeds = () => {
   };
   const { tokens } = useTheme();
   return (
-    <Card variation="elevated" style={{ margin: "0 auto" ,width: "100vh"}}>
+    <Card variation="elevated">
+      <Card
+        backgroundColor={tokens.colors.primary[80]}
+        color={tokens.colors.white}
+        columnStart="1"
+        columnEnd="-1"
+      >
+        <Flex
+          direction="column"
+          justifyContent="center"
+          alignItems="center"
+          alignContent="center"
+          wrap="nowrap"
+        >
+          <Heading level={1} color={tokens.colors.white}>
+            Filter Feeds
+          </Heading>
+        </Flex>
+      </Card>
       <Grid
         columnGap="0.5rem"
         rowGap="0.5rem"
         templateColumns="1fr 1fr 1fr"
-        templateRows="1fr 3fr 1fr"
       >
-        <Card
-          backgroundColor={tokens.colors.primary[80]}
-          color={tokens.colors.white}
-          columnStart="1"
-          columnEnd="-1"
-        >
-          <Flex
-            direction="column"
-            justifyContent="center"
-            alignItems="center"
-            alignContent="center"
-            wrap="nowrap"
-            gap="1rem"
-          >
-            <Heading level={1} color={tokens.colors.white}>
-              Filter Feeds
-            </Heading>
-          </Flex>
-        </Card>
         <Card columnStart="1" columnEnd="-1">
-          <View as="p" marginBottom="1rem">
+          <View marginBottom="1rem">
             <Heading level={3} color={tokens.colors.primary[90]}>
               Input Section
             </Heading>
@@ -70,7 +68,7 @@ const AmplifyFilterFeeds = () => {
               <Text>Drag 'n' Drop csv file here or click to select file</Text>
               <Button size="small" onClick={() => hiddenInput.current.click()}>
                 <MdOutlineFileUpload />
-                <Text paddingLeft={'0.3rem'}>Choose File</Text>
+                <Text paddingLeft={"0.3rem"}>Choose File</Text>
               </Button>
             </Flex>
             <VisuallyHidden>
@@ -126,7 +124,10 @@ const AmplifyFilterFeeds = () => {
               Output Section
             </Heading>
           </View>
-          <Text>The generated excel file can be downloaded from here once the process is completed</Text>
+          <Text>
+            The generated excel file can be downloaded from here once the
+            process is completed
+          </Text>
           <Button
             variation="primary"
             // colorTheme="info"
