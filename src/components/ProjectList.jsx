@@ -5,15 +5,15 @@ import React, { useEffect } from 'react';
 import { ProjectCard } from './ProjectCard';
 
 import _ from "lodash";
-import { Collection,Loader, Image, Divider, View, Badge, Flex, Heading, Button, Text, Card, useTheme, Grid } from "@aws-amplify/ui-react";
+import { Collection,Loader, Image, Divider, View, Badge, Flex, Heading, Button, Text, Card, useTheme, Grid, SearchField } from "@aws-amplify/ui-react";
 
 const ProjectList = () => {
   const client = generateClient();
   const [data, setData] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const [searchItems, setSearchItems] = React.useState([]);
+  const [searchKeyword, setSearchKeyword] = React.useState('');
   
-  console.log("Search ====", searchItems);
 
   const getAllProjects = async () => {
     const allProjects = await client.graphql({
@@ -40,10 +40,20 @@ const ProjectList = () => {
     getAllProjects();
   }, []);
   
+  const onChange = (event) => {
+    setSearchKeyword(event.target.value);
+    setData(data && data.find(o => o.title === event.target.value));
+  };
+  
 
   return (
     <React.Fragment>
-      {/* <Flex justifyContent="center">
+    {/*<SearchField
+      label="Search"
+      placeholder="Search here..."
+      onChange={onChange}
+    />
+       <Flex justifyContent="center">
         <Heading level={1}>Projects List</Heading>
       </Flex> */}
       <Collection
@@ -66,7 +76,7 @@ const ProjectList = () => {
               </Text>
             </Flex>
             : <Flex justifyContent="center">
-              <Flex  direction="column" alignItems="center">
+              <Flex  direction="column" alignItems="center" className="cus_loader">
                   <Loader size="large"  width="5rem" height="5rem"  color="#e94184"/>
               </Flex>
           </Flex>
@@ -82,7 +92,7 @@ const ProjectList = () => {
         }
       >
         {(item, index) => (
-          <ProjectCard key={item.id} index={index} title={item.title} services={item.services_used} tags={item.tags} url={item.demourl} description={item.description} id={item.id} updtedDate={item.updatedAt} searchItems={searchItems} />
+          <ProjectCard key={item.id} index={index} title={item.title} services={item.services_used} tags={item.tags} url={item.demourl} description={item.description} id={item.id} updatedDate={item.updatedAt} />
         )}
       </Collection>
     </React.Fragment>

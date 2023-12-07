@@ -29,15 +29,26 @@ const Header = ({ user }) => {
     
     return (
         <View className="header">
-            <Link href="/" className="logo">
-                <Image src={brandLogo} height={"58px"}/>
+            <Link href="/" className={`${window.location.pathname !== "/" ? "logo" : "logo link_visited"}`}>
+                <Image src={brandLogo} className="logoImg" />
             </Link>
             <View className="menu">
                 <Text className="menu-item user-text" fontSize="0.8em">Welcome, <Text as="span" fontSize="1.5em">{username}</Text></Text>
-                <Text className="menu-item home-text" ><Link href="/" className="home-link"><FaHome /></Link></Text>
+                <Text className="menu-item home-text" ><Link href="/" className={`${window.location.pathname !== "/" ? "home-link" : "home-link link_visited"}`}><FaHome /></Link></Text>
                 <Button variation="link" className="cus_signout_btn" onClick={handleSignOut}>
                     <FaPowerOff />
                 </Button>
+            </View>
+             <View className="menu-mobile">
+                <View className="menu-block-mobile left">
+                    <Text className="menu-item user-text" fontSize="0.8em">Welcome, <Text as="span" fontSize="1.5em">{username}</Text></Text>
+                </View>
+                <View className="menu-block-mobile right">
+                    <Text className="menu-item home-text" ><Link href="/" className={`${window.location.pathname !== "/" ? "home-link" : "home-link link_visited"}`}><FaHome /></Link></Text>
+                    <Button variation="link" className="cus_signout_btn" onClick={handleSignOut}>
+                        <FaPowerOff />
+                    </Button>
+                </View>
             </View>
         </View>
 

@@ -23,9 +23,7 @@ const ProjectDetails = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-
     fetchProject()
-
   }, []);
 
   const client = generateClient();
@@ -44,7 +42,7 @@ const ProjectDetails = () => {
   return (
     <>
       {isLoading ?
-        <Flex  direction="column" alignItems="center">
+        <Flex  direction="column" alignItems="center" className="cus_loader">
           <Loader size="large"  width="5rem" height="5rem"/>
         </Flex>
         :

@@ -71,6 +71,11 @@ button:focus-visible {
 .main_container{
   margin-top: 100px;
   margin-bottom: 60px;
+  padding: 0 6rem;
+  min-height:calc(100vh - 160px);
+  min-height:-webkit-calc(100vh - 160px);
+  min-height:-moz-calc(100vh - 220px);
+  position: relative;
 }
 /* Responsive menu - starts */
 .header {
@@ -83,6 +88,13 @@ button:focus-visible {
   left: 0;
   right: 0;
   padding: 0 6rem;
+}
+.logoImg {
+  height: 58px;
+}
+
+.header .menu-mobile {
+  display: none;
 }
 
 .header .menu {
@@ -227,37 +239,44 @@ button:focus-visible {
 /* Responsive menu - ends */
 /* Footer css - starts */
 .footer {
-  width: 116.63%;
+  width: 100%;
   z-index: 3;
   background-color: #000;
   color: #fff;
-  margin: 0 -6rem;
+  margin: 0;
   border-width:0px;
   min-height: 60px;
   line-height: 60px;
 }
 
-@media only screen and (min-width : 320px) and (max-width: 768px) {
-  .cus_signout_btn {
-    line-height: 0;
-    margin-top: 18px;
-    float: left;
+@media only screen and (min-width : 320px) and (max-width: 767px) {
+  .header .menu {
+    display: none;
   }
-  .user-text {
+  .header .menu-mobile {
+    display: block;
+  }
+  .header {
+    padding: 0;
+  }
+  
+  .menu-mobile .user-text {
     float: left;
+    line-height: 1;
   }
   .header .logo {
     float: none;
   }
-  .header .menu-item.home-text {
-    width: 20%;
+  .header .menu-mobile .menu-item.home-text {
+    /*width: 20%;*/
     float: left;
+    margin-right: 18px;
   }
-  .header .menu-item {
+  .header .menu-mobile .menu-item {
     padding-right: 0;
   }
   .main_container {
-    margin-top: 120px;
+    margin-top: 99px;
     padding: 0 1rem;
   }
   .footer {
@@ -265,6 +284,25 @@ button:focus-visible {
   }
   .custom_main_collection .amplify-collection-items{
     grid-template-columns: 1fr !important;
+  }
+  .menu-block-mobile {
+    display: inline-block;
+    margin: 0;
+    padding: 0px 8px;
+    /*float:left*/
+  }
+  .menu-block-mobile.left {
+    float: left;
+  }
+  .menu-block-mobile.right {
+    float: right; 
+    /*clear: both; */
+    position: relative; 
+    margin-top: -24px;
+    max-height: 50px;
+  }
+  .logoImg {
+    height: 50px;
   }
 }
 
@@ -292,4 +330,18 @@ button:focus-visible {
 .custom_visti_project_btn:hover{
   transform: scale(1.1);
 }
-
+.link_visited{
+  pointer-events: none;
+}
+.cus_loader{
+  top: 0;
+  bottom: 0;
+  display: inline-grid;
+  position: absolute;
+  left:0;
+  right: 0;
+  width:100%;
+}
+.cus_loader svg{
+  margin:0 auto;
+}

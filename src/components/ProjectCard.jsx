@@ -2,11 +2,12 @@ import { Link } from "react-router-dom";
 import { dataList } from './../assets/dummy.js';
 import { Badge, Flex, Heading, Button, Text, Card, View, Divider } from "@aws-amplify/ui-react";
 import { FaArrowRight } from "react-icons/fa";
+import _ from "lodash";
 
 
-export const ProjectCard = ({ index, title, url, description, services, tags, id, updtedDate, searchItems }) => {
+export const ProjectCard = ({ index, title, url, description, services, tags, id, updatedDate }) => {
   //var date = updtedDate
-  searchItems.push(index);
+  // searchItems.push(title);
   return (
     <Card
       key={index}
@@ -24,7 +25,7 @@ export const ProjectCard = ({ index, title, url, description, services, tags, id
           <View className="custom_main_grid_div">
             <Heading style={{"wordBreak": "break-word" , "text-align" : "left"}} level={5} >{title}</Heading>
             <Text  style={{"text-align" : "left"}} className="custom_date">
-              {updtedDate.split("T")[0] }
+              {new Date(updatedDate).toLocaleDateString()}
             </Text>
             <Flex marginBottom="10px">
               {tags.map((badge) =>
@@ -37,7 +38,13 @@ export const ProjectCard = ({ index, title, url, description, services, tags, id
             </Flex>
             <Divider border="2px solid #e94184" width={"50px"} marginBottom="10px" />
             <Text style={{"text-align" : "left"}}>
-              {description}
+              {_.truncate( 
+                description, { 
+                   'length': 140, 
+                   'omission': '...'
+                 }
+                )
+              }
             </Text>
           </View>
           <Button className="custom_visti_project_btn" variation="link" onClick={() => (location.href = "project-details/"+id)}>

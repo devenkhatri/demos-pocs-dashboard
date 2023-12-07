@@ -13,7 +13,8 @@ import config from './amplifyconfiguration.json';
 import ProjectDetails from "./components/ProjectDetails";
 import Header from './components/Header';
 import Footer from './components/Footer';
-import AdminProjectList from './components/admin/AdminProjectList'
+import AdminProjectList from './components/admin/AdminProjectList';
+import AdminProjectEdit from './components/admin/AdminProjectEdit';
 Amplify.configure(config);
 
 function App( {user }) {
@@ -29,7 +30,7 @@ function App( {user }) {
             <Route path="amplify-filter-feeds" element={<AmplifyFilterFeeds />} />
             <Route path="project-details/:id" element={<ProjectDetails />}/>
             <Route path="rxc345" element={<AdminProjectList />}/>
-
+            <Route path="rxc345-edit/:id" element={<AdminProjectEdit />}/>
             <Route path="*" element={<NoPage />} />
 
           </Route>
