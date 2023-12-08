@@ -1,5 +1,5 @@
 import { Amplify } from 'aws-amplify';
-import { withAuthenticator } from '@aws-amplify/ui-react';
+import { withAuthenticator, View } from '@aws-amplify/ui-react';
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
@@ -20,8 +20,8 @@ Amplify.configure(config);
 function App( {user }) {
   return (
     <ThemeProvider>
-      <Header  user={user} />
       <BrowserRouter>
+        <Header user={user} /> 
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
@@ -32,17 +32,20 @@ function App( {user }) {
             <Route path="rxc345" element={<AdminProjectList />}/>
             <Route path="rxc345-edit/:id" element={<AdminProjectEdit />}/>
             <Route path="*" element={<NoPage />} />
-
           </Route>
         </Routes>
+        <Footer />
       </BrowserRouter>
-      <Footer />
     </ThemeProvider>
   );
 }
 
 const NoPage = () => {
-  return <h1>404</h1>;
+  return (
+    <View as="div" className="cus_401_div"> 
+      <h1 className="cus_404_h1">404</h1>
+    </View>
+  );
 };
 
 export default withAuthenticator(App);

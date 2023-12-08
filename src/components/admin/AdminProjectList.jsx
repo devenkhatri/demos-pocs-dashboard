@@ -18,8 +18,7 @@ const AdminProjectList = ({  user }) => {
     const [data, setData] = React.useState([]);
     const [loading, setLoading] = React.useState(true);
     const [editingItems, setEditingItems] = React.useState([]);
-    const [redirectToEdit, setRedirect] = useState(false);
-    const [redirectId,setRedirectId ] = useState();
+    const [redirectToEdit, setRedirect] = useState("");
    
      useEffect(() => {
       getAllProjects();
@@ -27,7 +26,7 @@ const AdminProjectList = ({  user }) => {
     
     useEffect(() => {
        if (redirectToEdit){
-          return navigate("/rxc345-edit/"+redirectId);
+          return navigate("/rxc345-edit/"+redirectToEdit);
        }
     },[redirectToEdit]);
   
@@ -129,7 +128,7 @@ const AdminProjectList = ({  user }) => {
                     <SwitchField isChecked={!item.isdisabled} isDisabled={editingItems.includes(item.id)} onChange={(e) => disableProcess(item.id, e.target.checked)}/>
                   </TableCell>
                   <TableCell> 
-                    <Button variation="link" style={{"border":"none"}} onClick={() => editeNavigate(item.id)}>
+                    <Button variation="link" style={{"border":"none"}} onClick={() => setRedirect(item.id)}>
                       <FaPencilAlt />
                     </Button>
                   </TableCell>

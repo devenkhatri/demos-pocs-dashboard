@@ -11,17 +11,14 @@ export const ProjectCard = ({ index, title, url, description, services, tags, id
   //var date = updtedDate
   // searchItems.push(title);
   const navigate = useNavigate();
-  const [redirectToEdit, setRedirect] = useState(false);
-  const [redirectId,setRedirectId ] = useState();
+  const [redirectToEdit, setRedirect] = useState("");
+  
   useEffect(() => {
      if (redirectToEdit){
-        return navigate("/project-details/"+redirectId);
+        return navigate("/project-details/"+redirectToEdit);
      }
   },[redirectToEdit]); 
-  const demoNavigate = (id) => {
-    setRedirectId(id)
-    setRedirect(true)
-  }
+ 
   return (
     <Card
       key={index}
@@ -41,15 +38,17 @@ export const ProjectCard = ({ index, title, url, description, services, tags, id
             <Text  style={{"text-align" : "left"}} className="custom_date">
               {new Date(updatedDate).toLocaleDateString()}
             </Text>
-            <Flex marginBottom="10px">
-              {tags.map((badge) =>
-                <Badge
-                  size="small"
-                  variation="info">
-                  {badge}
-                </Badge>
-              )}
-            </Flex>
+            {tags?.length > 0 && tags[0] !== "" ?
+              <Flex marginBottom="10px">
+                {tags.map((badge) =>
+                  <Badge
+                    size="small"
+                    variation="info">
+                    {badge}
+                  </Badge>
+                )}
+              </Flex>
+            : null}
             <Divider border="2px solid #e94184" width={"50px"} marginBottom="10px" />
             <Text style={{"text-align" : "left"}}>
               {_.truncate( 
@@ -61,7 +60,7 @@ export const ProjectCard = ({ index, title, url, description, services, tags, id
               }
             </Text>
           </View>
-          <Button className="custom_visti_project_btn" variation="link" onClick={() => demoNavigate(id)}>
+          <Button className="custom_visti_project_btn" variation="link" onClick={() => setRedirect(id)}>
             Visit Project &nbsp; <FaArrowRight />
           </Button>
           
