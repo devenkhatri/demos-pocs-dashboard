@@ -59,10 +59,10 @@ const ProjectDetails = () => {
               justifyContent="flex-start"
             >
               <Heading level={3} alignSelf={"flex-start"}>
-                {projectData.title}
+                {projectData?.title || ""}
               </Heading>
               <Flex>
-                {projectData.tags?.map((tag, i) => {
+                {projectData?.tags?.map((tag, i) => {
                   return (
                     <Badge
                       variation="success"
@@ -76,7 +76,7 @@ const ProjectDetails = () => {
 
               </Flex>
               <Divider />
-              <Text textAlign={"left"}>{projectData.description}</Text>
+              <Text textAlign={"left"}>{projectData?.description}</Text>
               <Heading level={5} alignSelf={"flex-start"} marginTop={"20px"}>
                 Services Tags
               </Heading>
@@ -86,7 +86,7 @@ const ProjectDetails = () => {
                 columnGap="0.5rem"
                 rowGap="1rem"
               >
-                {projectData.services_used?.map((service, i) => {
+                {projectData?.services_used?.map((service, i) => {
                   return (
                     <View
                       as="div"
@@ -106,7 +106,7 @@ const ProjectDetails = () => {
                 Problem Statement
               </Heading>
               <Divider border="2px solid #e94184" width={"50px"} />
-              <Text textAlign={"left"}>{projectData.problem_statement}</Text>
+              <Text textAlign={"left"}>{projectData?.problem_statement}</Text>
               <Heading level={5} alignSelf={"flex-start"} marginTop={"20px"}>
                 Solution
               </Heading>
@@ -122,13 +122,13 @@ const ProjectDetails = () => {
                   src={projectData?.solution_diagram}
                   alt="Solution diagram image."
                 />
-                <Text textAlign={"left"}>{projectData.solution}</Text>
+                <Text textAlign={"left"}>{projectData?.solution}</Text>
               </Grid>
               <Button
                 marginTop={"20px"}
                 variation="primary"
-                isDisabled={projectData.demourl ? false : true}
-                onClick={() => (location.href = projectData.demourl)}
+                isDisabled={projectData?.demourl ? false : true}
+                onClick={() => (location.href = projectData?.demourl)}
               >
                 Visit Project
               </Button>

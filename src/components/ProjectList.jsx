@@ -3,7 +3,6 @@ import { generateClient } from 'aws-amplify/api';
 import * as queries from '../graphql/queries';
 import React, { useEffect } from 'react';
 import { ProjectCard } from './ProjectCard';
-
 import _ from "lodash";
 import { Collection,Loader, Image, Divider, View, Badge, Flex, Heading, Button, Text, Card, useTheme, Grid, SearchField } from "@aws-amplify/ui-react";
 
@@ -14,7 +13,6 @@ const ProjectList = () => {
   const [searchItems, setSearchItems] = React.useState([]);
   const [searchKeyword, setSearchKeyword] = React.useState('');
   
-
   const getAllProjects = async () => {
     const allProjects = await client.graphql({
       query: queries.listProjects,
@@ -45,7 +43,7 @@ const ProjectList = () => {
     setData(data && data.find(o => o.title === event.target.value));
   };
   
-
+  
   return (
     <React.Fragment>
     {/*<SearchField

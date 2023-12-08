@@ -9,16 +9,27 @@ import { Collection, Loader, Flex, Button, Table, TableCell,  TableBody,  TableH
 import { FaPencilAlt } from "react-icons/fa";
 import { updateProjects } from '../../graphql/mutations';
 import { ToastContainer, toast } from 'react-toastify';
+import { useNavigate } from "react-router-dom";
+
 
 const AdminProjectList = ({  user }) => {
+    const navigate = useNavigate();
     const client = generateClient();
     const [data, setData] = React.useState([]);
     const [loading, setLoading] = React.useState(true);
     const [editingItems, setEditingItems] = React.useState([]);
-  
+    const [redirectToEdit, setRedirect] = useState(false);
+    const [redirectId,setRedirectId ] = useState();
+   
      useEffect(() => {
       getAllProjects();
     }, []);
+    
+    useEffect(() => {
+       if (redirectToEdit){
+          return navigate("/rxc345-edit/"+redirectId);
+       }
+    },[redirectToEdit]);
   
     const getAllProjects = async () => {
       const allProjects = await client.graphql({
@@ -29,6 +40,10 @@ const AdminProjectList = ({  user }) => {
         const filteredData = _.orderBy(allProjects.data.listProjects.items, ['updatedAt'], ['desc']);
         setData(allProjects.data.listProjects.items);
       }
+    }
+    const editeNavigate = (id) => {
+        setRedirectId(id)
+        setRedirect(true)
     }
     
     const disableProcess = (disableprojectId, disableSwitch) => {
@@ -97,11 +112,11 @@ const AdminProjectList = ({  user }) => {
             <Loader size="large"  width="5rem" height="5rem"/>
           </Flex>
       :
-        <Table style ={{"max-width": "50rem", "margin": "0 auto"}}>
+        <Table style ={{"max-width": "50rem", "margin": "0 auto", "width": "100%"}} highlightOnHover={true}>
           <TableHead>
             <TableRow>
-              <TableCell as="th" style={{"text-align":"left"}}>Title</TableCell>
-              <TableCell as="th">Enable</TableCell>
+              <TableCell as="th" style={{"text-align":"left"}} >Title</TableCell>
+              <TableCell as="th" >Enable</TableCell>
               <TableCell as="th">Action</TableCell>
             </TableRow>
           </TableHead>
@@ -109,12 +124,12 @@ const AdminProjectList = ({  user }) => {
           {data.map(item=>{
               return(
                  <TableRow key={item.id}>
-                  <TableCell style={{"text-align":"left"}}>{item.title}</TableCell>
+                  <TableCell style={{"text-align":"left"}} >{item.title}</TableCell>
                   <TableCell>
                     <SwitchField isChecked={!item.isdisabled} isDisabled={editingItems.includes(item.id)} onChange={(e) => disableProcess(item.id, e.target.checked)}/>
                   </TableCell>
                   <TableCell> 
-                    <Button variation="link" style={{"border":"none"}} onClick={() => (location.href = "rxc345-edit/"+item.id)}>
+                    <Button variation="link" style={{"border":"none"}} onClick={() => editeNavigate(item.id)}>
                       <FaPencilAlt />
                     </Button>
                   </TableCell>

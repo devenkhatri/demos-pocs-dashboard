@@ -3,11 +3,25 @@ import { dataList } from './../assets/dummy.js';
 import { Badge, Flex, Heading, Button, Text, Card, View, Divider } from "@aws-amplify/ui-react";
 import { FaArrowRight } from "react-icons/fa";
 import _ from "lodash";
+import { useEffect,useState } from 'react';
+import { useNavigate } from "react-router-dom";
 
 
 export const ProjectCard = ({ index, title, url, description, services, tags, id, updatedDate }) => {
   //var date = updtedDate
   // searchItems.push(title);
+  const navigate = useNavigate();
+  const [redirectToEdit, setRedirect] = useState(false);
+  const [redirectId,setRedirectId ] = useState();
+  useEffect(() => {
+     if (redirectToEdit){
+        return navigate("/project-details/"+redirectId);
+     }
+  },[redirectToEdit]); 
+  const demoNavigate = (id) => {
+    setRedirectId(id)
+    setRedirect(true)
+  }
   return (
     <Card
       key={index}
@@ -47,7 +61,7 @@ export const ProjectCard = ({ index, title, url, description, services, tags, id
               }
             </Text>
           </View>
-          <Button className="custom_visti_project_btn" variation="link" onClick={() => (location.href = "project-details/"+id)}>
+          <Button className="custom_visti_project_btn" variation="link" onClick={() => demoNavigate(id)}>
             Visit Project &nbsp; <FaArrowRight />
           </Button>
           

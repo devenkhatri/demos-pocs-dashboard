@@ -345,3 +345,9 @@ button:focus-visible {
 .cus_loader svg{
   margin:0 auto;
 }
+.custom_main_collection .amplify-searchfield{
+  margin-left: auto;
+}
+.custom_main_collection .amplify-searchfield input{
+  text-align: left;
+}
