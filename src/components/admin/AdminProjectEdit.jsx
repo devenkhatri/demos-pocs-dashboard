@@ -77,12 +77,13 @@ const AdminProjectEdit = () => {
                 position: "top-right",
                 autoClose: 3000,
                 hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                // draggable: true,
-                progress: undefined,
+                closeOnClick: false,
+                pauseOnHover: false,
                 theme: "light",
             });
+            setTimeout(() => {
+                setRedirect(true)
+            }, 3000)
           })
           .catch(() => {
             setIsLoading(false)
@@ -90,9 +91,8 @@ const AdminProjectEdit = () => {
                 position: "top-right",
                 autoClose: 3000,
                 hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                // draggable: true,
+                closeOnClick: false,
+                pauseOnHover: false,
                 progress: undefined,
                 theme: "light",
             });
@@ -103,13 +103,13 @@ const AdminProjectEdit = () => {
     }
     return(
         <>
+        <ToastContainer />
         {isLoading ?
             <Flex  direction="column" alignItems="center" className="cus_loader">
               <Loader size="large"  width="5rem" height="5rem"/>
             </Flex>
         :
             <Flex justifyContent="center">
-                <ToastContainer />
                 <Card variation="elevated" paddingLeft={{ base: "1rem", large: "2.5rem" }} paddingRight={{ base: "1rem", large: "2.5rem" }} width="100%" maxWidth="800px">
                     <Flex direction="column" alignContent="flex-start" justifyContent="flex-start" style={{"text-align":"left"}}>
                         <Fieldset variation="plain" direction="column">

@@ -69,12 +69,13 @@ button:focus-visible {
 }
 
 .main_container{
-  margin-top: 100px;
-  margin-bottom: 60px;
-  padding: 0 6rem;
-  min-height:calc(100vh - 160px);
-  min-height:-webkit-calc(100vh - 160px);
-  min-height:-moz-calc(100vh - 220px);
+  padding-top: 100px;
+  padding-bottom: 60px;
+  padding-left: 6rem;
+  padding-right: 6rem;
+  min-height:calc(100vh - 60px);
+  min-height:-webkit-calc(100vh - 60px);
+  min-height:-moz-calc(100vh - 60px);
   position: relative;
 }
 /* Responsive menu - starts */
@@ -217,6 +218,7 @@ button:focus-visible {
   outline: none !important;
   background: none !important;
   box-shadow:none !important;
+  color:#474b95 !important;
 }
 .cus_signout_btn,
 .cus_signout_btn:active,
@@ -231,6 +233,7 @@ button:focus-visible {
 .home-link {
   font-size: 24px;
   line-height: 65px;
+  color:#474b95 !important;
 }
 .user-text {
   line-height: 62px;
@@ -350,4 +353,21 @@ button:focus-visible {
 }
 .custom_main_collection .amplify-searchfield input{
   text-align: left;
+}
+.cus_404_h1{
+  margin: 0;
+  display: inherit;
+  vertical-align: middle;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+}
+.cus_401_div{
+    top: 0;
+    bottom: 0;
+    display: inline-grid;
+    position: absolute;
+    left: 0;
+    right: 0;
+    width: 100%;
 }

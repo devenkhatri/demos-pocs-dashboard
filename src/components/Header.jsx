@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Image, MenuItem, Menu, Divider, View, Flex, Text, Link, Icon, Input, Label, CheckboxField, useTheme, Button } from "@aws-amplify/ui-react";
+import { Image, MenuItem, Menu, Divider, View, Flex, Text, Icon, Input, Label, CheckboxField, useTheme, Button } from "@aws-amplify/ui-react";
 import brandLogo from "../assets/tcs_logo.png";
+import {Link} from "react-router-dom"
 import { FaHome, FaPowerOff } from "react-icons/fa";
 import { fetchUserAttributes, signOut } from 'aws-amplify/auth';
 const IconSave = () => {
@@ -29,12 +30,12 @@ const Header = ({ user }) => {
     
     return (
         <View className="header">
-            <Link href="/" className={`${window.location.pathname !== "/" ? "logo" : "logo link_visited"}`}>
+            <Link to="/" className="logo">
                 <Image src={brandLogo} className="logoImg" />
             </Link>
             <View className="menu">
                 <Text className="menu-item user-text" fontSize="0.8em">Welcome, <Text as="span" fontSize="1.5em">{username}</Text></Text>
-                <Text className="menu-item home-text" ><Link href="/" className={`${window.location.pathname !== "/" ? "home-link" : "home-link link_visited"}`}><FaHome /></Link></Text>
+                <Text className="menu-item home-text" ><Link to="/" className="home-link"><FaHome /></Link></Text>
                 <Button variation="link" className="cus_signout_btn" onClick={handleSignOut}>
                     <FaPowerOff />
                 </Button>
@@ -44,7 +45,7 @@ const Header = ({ user }) => {
                     <Text className="menu-item user-text" fontSize="0.8em">Welcome, <Text as="span" fontSize="1.5em">{username}</Text></Text>
                 </View>
                 <View className="menu-block-mobile right">
-                    <Text className="menu-item home-text" ><Link href="/" className={`${window.location.pathname !== "/" ? "home-link" : "home-link link_visited"}`}><FaHome /></Link></Text>
+                    <Text className="menu-item home-text" ><Link to="/" className="home-link"><FaHome /></Link></Text>
                     <Button variation="link" className="cus_signout_btn" onClick={handleSignOut}>
                         <FaPowerOff />
                     </Button>
