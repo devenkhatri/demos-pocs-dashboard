@@ -14,8 +14,6 @@ import {
 } from "@aws-amplify/ui-react";
 import { MdOutlineFileUpload } from "react-icons/md";
 import Papa from "papaparse";
-// import { exportToExcel } from 'react-json-to-excel';
-import * as XLSX from 'xlsx'; 
 const allowedExtensions = ["csv"];
 
 const AmplifyFilterFeeds = () => {
@@ -40,16 +38,6 @@ const AmplifyFilterFeeds = () => {
     setFileName("")
     setCsvColumnsList("")
   }
-  
-  const exportToExcel = (data,fileName) => {
-    const worksheet = XLSX.utils.json_to_sheet(data);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
-    //let buffer = XLSX.write(workbook, { bookType: "xlsx", type: "buffer" });
-    //XLSX.write(workbook, { bookType: "xlsx", type: "binary" });
-    const FileName = fileName +".xlsx";
-    XLSX.writeFile(workbook, FileName);
-  };
   const getExtension = (filename) => {
     const parts = filename.split('.');
     return parts[parts.length - 1];
@@ -264,7 +252,7 @@ const AmplifyFilterFeeds = () => {
             // colorTheme="info"
             loadingText=""
             disabled = {!enableDownload}
-            onClick={() => exportToExcel(filteredData,fileName)}
+            onClick={() => exportToExcel(filteredData, fileName)}
           >
             Download
           </Button>
