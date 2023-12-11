@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from 'react';
 import {
   Button,
   Card,
@@ -13,19 +13,106 @@ import {
   useTheme,
 } from "@aws-amplify/ui-react";
 import { MdOutlineFileUpload } from "react-icons/md";
+import Papa from "papaparse";
+import { exportToExcel } from 'react-json-to-excel';
+const allowedExtensions = ["csv"];
 
 const AmplifyFilterFeeds = () => {
-  const acceptedFileTypes = ["text/*"];
+  const { tokens } = useTheme();
   const [files, setFiles] = React.useState([]);
+  const [listOfTotalData, setListOfTotalData] = React.useState([]);
+  const [filteredData, setFilteredData] = React.useState([]);
+  const [startProcess, setStartProcess] = React.useState(false);
+  const [enableDownload, setEnableDownload] = React.useState(false);
+  const [fileName, setFileName] = React.useState("");
+  const [inputList, setInputList] = React.useState("");
+  const [percent, setPercent] = React.useState(0);
+  const [csvColumnsList, setCsvColumnsList] = React.useState("");
+  const [includedColumnsInExcel, setIncludedColumnsInExcel] = React.useState("");
   const hiddenInput = React.useRef(null);
+  
+  const resetAllData = () => {
+    setPercent(0)
+    setEnableDownload(false)
+    setFilteredData([])
+    setStartProcess(false)
+    setFileName("")
+    setCsvColumnsList("")
+  }
   const onFilePickerChange = (event) => {
+    resetAllData()
     const { files } = event.target;
     if (!files || files.length === 0) {
       return;
     }
+    const reader = new FileReader();
+    reader.onload = ({ target }) => {
+        Papa.parse(target.result, {
+            header: true,
+            step: function(results, parser) {
+              console.log("results >", results, parser?.streamer?._rowCount, parser)
+                if (results?.meta?.fields && results?.meta?.fields?.length) {
+                  setCsvColumnsList(results?.meta?.fields.join(", "))
+                }
+                parser.abort(); 
+                results = null;
+            }, complete: function(results){
+                results=null;
+            }
+        });
+    };
+    reader.readAsText(files[0]);
     setFiles(Array.from(files));
   };
-  const { tokens } = useTheme();
+  useEffect(() => {
+    if (startProcess && files && files.length) {
+      if (!files) return alert("Enter a valid file");
+      const reader = new FileReader();
+      reader.onload = async ({ target }) => {
+          const csv = Papa.parse(target.result, {
+              header: true
+          });
+          const parsedData = csv?.data
+          setListOfTotalData(parsedData)
+          const searchInput = inputList.split(",")
+          const includedColumnsInExcelList = includedColumnsInExcel.split(",")
+          const finalList = []
+          parsedData.forEach((item) => {
+            const valuesList = Object.values(item)
+            let findItem = false;
+              searchInput.forEach((searchItem) => {
+                if (!findItem) {
+                  if (valuesList.toString().toLowerCase().includes(searchItem.toLowerCase())) {
+                    findItem = true;
+                  }
+                }
+              })
+              if (findItem) {
+                let finalObject = {}
+                if (includedColumnsInExcelList.length) {
+                  includedColumnsInExcelList.forEach((columnName) => {
+                    if (item.hasOwnProperty(columnName)) {
+                      finalObject[columnName] = item[columnName]
+                    }
+                  })
+                } else {
+                  finalObject = {...item}
+                }
+                finalList.push(finalObject);
+              }
+          })
+          setFilteredData(finalList)
+          const fullPath = files[0].name;
+          setFileName(fullPath.substring(0, fullPath.lastIndexOf('.')) || fullPath)
+          setEnableDownload(true)
+      };
+      reader.addEventListener('progress', function(e){
+        var progress_width = Math.ceil(e.loaded/e.total * 100);
+        setPercent(progress_width)
+      }, true);
+      reader.readAsText(files[0]);
+    }
+  }, [startProcess]);
   return (
     <Card variation="elevated">
       <Card
@@ -57,9 +144,8 @@ const AmplifyFilterFeeds = () => {
               Input Section
             </Heading>
           </View>
-
           <DropZone
-            acceptedFileTypes={acceptedFileTypes}
+            acceptedFileTypes={allowedExtensions}
             onDropComplete={({ acceptedFiles, rejectedFiles }) => {
               setFiles(acceptedFiles);
             }}
@@ -77,17 +163,26 @@ const AmplifyFilterFeeds = () => {
                 tabIndex={-1}
                 ref={hiddenInput}
                 onChange={onFilePickerChange}
-                multiple={true}
-                accept={acceptedFileTypes.join(",")}
+                multiple={false}
+                accept={allowedExtensions.join(",")}
               />
             </VisuallyHidden>
           </DropZone>
           {files.map((file) => (
-            <Text key={file.name}>{file.name}</Text>
+            <Text key={file?.name}>{file?.name}</Text>
           ))}
+          {csvColumnsList?.length ?
+            <Flex direction="column" margin="1rem 0">
+              <Text><b>Existing Columns In CSV :</b> {csvColumnsList}</Text>
+            </Flex>
+          : null}
+          <Flex direction="column" margin="1rem 0">
+            <Text>Output Columns : </Text>
+            <Input placeholder="Add comma seperated columns name" onChange={(e) => setIncludedColumnsInExcel(e.target.value)}/>
+          </Flex>
           <Flex direction="column" margin="1rem 0">
             <Text>Keywords : </Text>
-            <Input placeholder="Add comma seperated keywords" />
+            <Input placeholder="Add comma seperated keywords" onChange={(e) => setInputList(e.target.value)}/>
           </Flex>
           <Flex
             direction="row"
@@ -100,18 +195,20 @@ const AmplifyFilterFeeds = () => {
             <Button
               variation="primary"
               loadingText=""
-              onClick={() => alert("WIP")}
+              onClick={() => setStartProcess(true)}
             >
               Process
             </Button>
-            {/* <View
+            <View
               as="progress"
               data-progress-bar
-              // color={tokens.colors.primary[90]}
+              color={tokens.colors.primary[90]}
               padding="1rem"
+              width="100%"
               max="100"
-              value="75"
-            /> */}
+              value={percent}
+            />
+            <View as="div">{percent}%</View>
           </Flex>
         </Card>
         <Card
@@ -124,19 +221,25 @@ const AmplifyFilterFeeds = () => {
               Output Section
             </Heading>
           </View>
-          <Text>
-            The generated excel file can be downloaded from here once the
-            process is completed
-          </Text>
+          <Flex direction="column"  gap="0.5rem" marginBottom="0.5rem">
+           
+            <Text>
+              The generated excel file can be downloaded from here once the
+              process is completed
+            </Text>
+            {enableDownload && <View as="div"><b>Total rows:</b> {listOfTotalData.length}</View>}
+            {enableDownload && <View as="div"><b>Extracted rows:</b> {filteredData.length}</View>}
+          </Flex>
           <Button
             variation="primary"
             // colorTheme="info"
             loadingText=""
-            disabled
-            onClick={() => alert("hello")}
+            disabled = {!enableDownload}
+            onClick={() => exportToExcel(filteredData, fileName)}
           >
             Download
           </Button>
+          
         </Card>
       </Grid>
     </Card>
