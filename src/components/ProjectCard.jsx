@@ -11,13 +11,21 @@ export const ProjectCard = ({ index, title, url, description, services, tags, id
   //var date = updtedDate
   // searchItems.push(title);
   const navigate = useNavigate();
-  const [redirectToEdit, setRedirect] = useState("");
+  const [redirectToEdit, setRedirectToEdit] = useState("");
+  const [redirectToDemo, setRedirectToDemo] = useState("");
   
   useEffect(() => {
      if (redirectToEdit){
         return navigate("/project-details/"+redirectToEdit);
      }
   },[redirectToEdit]); 
+  
+  useEffect(() => {
+     if (redirectToDemo){
+        return navigate(url);
+     }
+  },[redirectToDemo]); 
+ 
  
   return (
     <Card
@@ -60,9 +68,16 @@ export const ProjectCard = ({ index, title, url, description, services, tags, id
               }
             </Text>
           </View>
-          <Button className="custom_visti_project_btn" variation="link" onClick={() => setRedirect(id)}>
-            Visit Project &nbsp; <FaArrowRight />
+          <Flex>
+          {url &&
+            <Button  className="custom_visti_project_btn"  onClick={() => setRedirectToDemo(id)}>
+                Visit Demo &nbsp; <FaArrowRight />
+            </Button>
+          }
+           <Button className="custom_visti_project_btn" variation="link" onClick={() => setRedirectToEdit(id)}>
+               Visit Project &nbsp; <FaArrowRight />
           </Button>
+          </Flex>
           
         </Flex>
       </Flex>
