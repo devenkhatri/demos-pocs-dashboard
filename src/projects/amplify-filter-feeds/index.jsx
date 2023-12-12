@@ -55,6 +55,7 @@ const AmplifyFilterFeeds = () => {
       alert("Extension Not allowed");
       return;
     }
+  
     const reader = new FileReader();
     reader.onload = ({ target }) => {
         Papa.parse(target.result, {
@@ -72,6 +73,13 @@ const AmplifyFilterFeeds = () => {
     };
     reader.readAsText(files[0]);
     setFiles(Array.from(files));
+  };
+  const exportToExcel = (data,fileName) => {
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+    const FileName = fileName +".xlsx";
+    XLSX.writeFile(workbook, FileName);
   };
   useEffect(() => {
     if (startProcess && files && files.length) {
