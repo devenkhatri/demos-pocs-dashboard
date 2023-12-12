@@ -11,9 +11,12 @@ import {
   View,
   VisuallyHidden,
   useTheme,
+  Divider,
+  TextAreaField
 } from "@aws-amplify/ui-react";
 import { MdOutlineFileUpload } from "react-icons/md";
 import Papa from "papaparse";
+import * as XLSX from 'xlsx'; 
 const allowedExtensions = ["csv"];
 
 const AmplifyFilterFeeds = () => {
@@ -117,13 +120,20 @@ const AmplifyFilterFeeds = () => {
         setPercent(progress_width)
       }, true);
       reader.readAsText(files[0]);
+      setStartProcess(false)
     }
-  }, [startProcess]);
+  }, [startProcess])
+  
   useEffect(() => {
-    if (csvColumnsList && window.localStorage.getItem(csvColumnsList)) {
-      setIncludedColumnsInExcel(window.localStorage.getItem(csvColumnsList))
+    if (csvColumnsList) {
+      if (window.localStorage.getItem(csvColumnsList)) {
+        setIncludedColumnsInExcel(window.localStorage.getItem(csvColumnsList))
+      } else {
+        setIncludedColumnsInExcel("")
+      }
     }
   }, [csvColumnsList])
+  
   return (
     <Card variation="elevated">
       <Card
@@ -150,11 +160,6 @@ const AmplifyFilterFeeds = () => {
         templateColumns="1fr 1fr 1fr"
       >
         <Card columnStart="1" columnEnd="-1">
-          <View marginBottom="1rem">
-            <Heading level={3} color={tokens.colors.primary[90]}>
-              Input Section
-            </Heading>
-          </View>
           <DropZone
             acceptedFileTypes={allowedExtensions}
             onDropComplete={({ acceptedFiles, rejectedFiles }) => {
@@ -183,24 +188,29 @@ const AmplifyFilterFeeds = () => {
             <Text key={file?.name}>{file?.name}</Text>
           ))}
           {csvColumnsList?.length ?
-            <Flex direction="column" margin="1rem 0">
-              <Text><b>Existing Columns In CSV :</b> {csvColumnsList}</Text>
-            </Flex>
+            <Card  variation="elevated" marginTop="15px" marginBottom="15px">
+              <Heading level={5} alignSelf={"flex-start"} style={{"text-align":"left"}} >
+                Existing Columns In CSV
+              </Heading>
+              <Text style={{"text-align":"left"}}>{csvColumnsList}</Text>
+            </Card>
           : null}
-          <Flex direction="column" margin="1rem 0">
-            <Text>Output Columns : </Text>
-            <Input placeholder="Add comma seperated columns name" value={includedColumnsInExcel} onChange={(e) => {
-                if (csvColumnsList) {
-                  window.localStorage.setItem(csvColumnsList, e.target.value);
+          <Grid  columnGap="2rem" templateColumns={{ base: '1fr', large: '1fr 1fr' }} direction="row" margin="2rem 0">
+            <View >
+              <Text style={{"text-align":"left"}} fontWeight="600">Output Columns</Text>
+              <TextAreaField placeholder="Add comma seperated columns name" style={{"text-align":"left"}} rows={2} value={includedColumnsInExcel} onChange={(e) => {
+                  if (csvColumnsList) {
+                    window.localStorage.setItem(csvColumnsList, e.target.value);
+                  }
+                  setIncludedColumnsInExcel(e.target.value)
                 }
-                setIncludedColumnsInExcel(e.target.value)
-              }
-            }/>
-          </Flex>
-          <Flex direction="column" margin="1rem 0">
-            <Text>Keywords : </Text>
-            <Input placeholder="Add comma seperated keywords" value={inputList} onChange={(e) => { window.localStorage.setItem("keywords", e.target.value); setInputList(e.target.value)}}/>
-          </Flex>
+              }/>
+            </View>
+            <View>
+              <Text style={{"text-align":"left"}} fontWeight="600">Keywords</Text>
+              <TextAreaField placeholder="Add comma seperated keywords" style={{"text-align":"left"}} rows={2} value={inputList} onChange={(e) => { window.localStorage.setItem("keywords", e.target.value); setInputList(e.target.value)}}/>
+            </View>
+          </Grid>
           <Flex
             direction="row"
             justifyContent="space-between"
@@ -249,7 +259,6 @@ const AmplifyFilterFeeds = () => {
           </Flex>
           <Button
             variation="primary"
-            // colorTheme="info"
             loadingText=""
             disabled = {!enableDownload}
             onClick={() => exportToExcel(filteredData, fileName)}
