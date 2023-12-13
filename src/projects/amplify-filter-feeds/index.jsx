@@ -91,72 +91,72 @@ const AmplifyFilterFeeds = () => {
     XLSX.writeFile(workbook, FileName);
   };
   useEffect(() => {
-    if (startProcess && files && files.length) {
-      if (!files){
-        toast.error('Enter a valid file', {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: false,
-          progress: undefined,
-          theme: "light",
-        });
-        return;
-      }  
-      const reader = new FileReader();
-      reader.onload = async ({ target }) => {
-          const csv = Papa.parse(target.result, {
-              header: true
-          });
-          const parsedData = csv?.data
-          setListOfTotalData(parsedData)
-          const searchInput = inputList.split(",")?.map((splitedItem) => splitedItem.trim())
-          const includedColumnsInExcelList = includedColumnsInExcel.split(",")?.map((splitedItem) => splitedItem.trim())
-          const finalList = []
-          parsedData.forEach((item) => {
-            const valuesList = Object.values(item)
-            let findItem = false;
-              searchInput.forEach((searchItem) => {
-                if (!findItem) {
-                  if (searchItem.toLowerCase() && valuesList.toString().toLowerCase().includes(searchItem.toLowerCase())) {
-                    findItem = true;
-                  }
-                }
-              })
-              if (findItem) {
-                let finalObject = {}
-                if (includedColumnsInExcel && includedColumnsInExcelList.length) {
-                  includedColumnsInExcelList.forEach((columnName) => {
-                    if (item.hasOwnProperty(columnName)) {
-                      finalObject[columnName] = item[columnName]
+    if (startProcess) {
+      if (files && files.length) {
+        const reader = new FileReader();
+        reader.onload = async ({ target }) => {
+            const csv = Papa.parse(target.result, {
+                header: true
+            });
+            const parsedData = csv?.data
+            setListOfTotalData(parsedData)
+            const searchInput = inputList.split(",")?.map((splitedItem) => splitedItem.trim())
+            const includedColumnsInExcelList = includedColumnsInExcel.split(",")?.map((splitedItem) => splitedItem.trim())
+            const finalList = []
+            parsedData.forEach((item) => {
+              const valuesList = Object.values(item)
+              let findItem = false;
+                searchInput.forEach((searchItem) => {
+                  if (!findItem) {
+                    if (searchItem.toLowerCase() && valuesList.toString().toLowerCase().includes(searchItem.toLowerCase())) {
+                      findItem = true;
                     }
-                  })
-                } else {
-                  finalObject = item
+                  }
+                })
+                if (findItem) {
+                  let finalObject = {}
+                  if (includedColumnsInExcel && includedColumnsInExcelList.length) {
+                    includedColumnsInExcelList.forEach((columnName) => {
+                      if (item.hasOwnProperty(columnName)) {
+                        finalObject[columnName] = item[columnName]
+                      }
+                    })
+                  } else {
+                    finalObject = item
+                  }
+                  finalList.push(finalObject);
                 }
-                finalList.push(finalObject);
-              }
-          })
-          setFilteredData(finalList)
-          const fullPath = files[0].name;
-          setFileName(fullPath.substring(0, fullPath.lastIndexOf('.')) || fullPath)
-          toast('Content filtered successfully', {
+            })
+            setFilteredData(finalList)
+            const fullPath = files[0].name;
+            setFileName(fullPath.substring(0, fullPath.lastIndexOf('.')) || fullPath)
+            toast('Content filtered successfully', {
+              position: "top-right",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: false,
+              pauseOnHover: false,
+              theme: "light",
+            });
+            setEnableDownload(true)
+        };
+        reader.addEventListener('progress', function(e){
+          var progress_width = Math.ceil(e.loaded/e.total * 100);
+          setPercent(progress_width)
+        }, true);
+        reader.readAsText(files[0]);
+        setStartProcess(false)
+      } else {
+          toast.error('Enter a valid file', {
             position: "top-right",
             autoClose: 3000,
             hideProgressBar: false,
             closeOnClick: false,
             pauseOnHover: false,
+            progress: undefined,
             theme: "light",
           });
-          setEnableDownload(true)
-      };
-      reader.addEventListener('progress', function(e){
-        var progress_width = Math.ceil(e.loaded/e.total * 100);
-        setPercent(progress_width)
-      }, true);
-      reader.readAsText(files[0]);
-      setStartProcess(false)
+      }
     }
   }, [startProcess])
   
