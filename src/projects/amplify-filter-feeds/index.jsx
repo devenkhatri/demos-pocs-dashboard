@@ -16,7 +16,8 @@ import {
 } from "@aws-amplify/ui-react";
 import { MdOutlineFileUpload } from "react-icons/md";
 import Papa from "papaparse";
-import * as XLSX from 'xlsx'; 
+import * as XLSX from 'xlsx';
+import { ToastContainer, toast } from 'react-toastify';
 const allowedExtensions = ["csv"];
 
 const AmplifyFilterFeeds = () => {
@@ -52,7 +53,15 @@ const AmplifyFilterFeeds = () => {
       return;
     }
     if (!allowedExtensions.includes(getExtension(files[0].name))) {
-      alert("Extension Not allowed");
+      toast.error('Please Enter CSV File', {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: false,
+        progress: undefined,
+        theme: "light",
+      });
       return;
     }
   
@@ -83,7 +92,18 @@ const AmplifyFilterFeeds = () => {
   };
   useEffect(() => {
     if (startProcess && files && files.length) {
-      if (!files) return alert("Enter a valid file");
+      if (!files){
+        toast.error('Enter a valid file', {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: false,
+          progress: undefined,
+          theme: "light",
+        });
+        return;
+      }  
       const reader = new FileReader();
       reader.onload = async ({ target }) => {
           const csv = Papa.parse(target.result, {
@@ -121,6 +141,14 @@ const AmplifyFilterFeeds = () => {
           setFilteredData(finalList)
           const fullPath = files[0].name;
           setFileName(fullPath.substring(0, fullPath.lastIndexOf('.')) || fullPath)
+          toast('File Successfully Created, Click on download button to get file', {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: false,
+            theme: "light",
+          });
           setEnableDownload(true)
       };
       reader.addEventListener('progress', function(e){
@@ -143,12 +171,14 @@ const AmplifyFilterFeeds = () => {
   }, [csvColumnsList])
   
   return (
-    <Card variation="elevated">
+    <>
+    <ToastContainer />
+    <Card variation="elevated" padding="2rem">
       <Card
         backgroundColor={tokens.colors.primary[80]}
         color={tokens.colors.white}
         columnStart="1"
-        columnEnd="-1"
+        columnEnd="-1" 
       >
         <Flex
           direction="column"
@@ -167,7 +197,7 @@ const AmplifyFilterFeeds = () => {
         rowGap="0.5rem"
         templateColumns="1fr 1fr 1fr"
       >
-        <Card columnStart="1" columnEnd="-1">
+        <Card columnStart="1" columnEnd="-1" padding="1rem 0">
           <DropZone
             acceptedFileTypes={allowedExtensions}
             onDropComplete={({ acceptedFiles, rejectedFiles }) => {
@@ -277,6 +307,7 @@ const AmplifyFilterFeeds = () => {
         </Card>
       </Grid>
     </Card>
+    </>
   );
 };
 
