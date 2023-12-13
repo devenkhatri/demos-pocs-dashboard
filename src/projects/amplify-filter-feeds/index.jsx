@@ -11,10 +11,13 @@ import {
   View,
   VisuallyHidden,
   useTheme,
+  Divider,
+  TextAreaField
 } from "@aws-amplify/ui-react";
 import { MdOutlineFileUpload } from "react-icons/md";
 import Papa from "papaparse";
-import { exportToExcel } from 'react-json-to-excel';
+import * as XLSX from 'xlsx';
+import { ToastContainer, toast } from 'react-toastify';
 const allowedExtensions = ["csv"];
 
 const AmplifyFilterFeeds = () => {
@@ -50,9 +53,18 @@ const AmplifyFilterFeeds = () => {
       return;
     }
     if (!allowedExtensions.includes(getExtension(files[0].name))) {
-      alert("Extension Not allowed");
+      toast.error('Please Enter CSV File', {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: false,
+        progress: undefined,
+        theme: "light",
+      });
       return;
     }
+  
     const reader = new FileReader();
     reader.onload = ({ target }) => {
         Papa.parse(target.result, {
@@ -71,67 +83,102 @@ const AmplifyFilterFeeds = () => {
     reader.readAsText(files[0]);
     setFiles(Array.from(files));
   };
+  const exportToExcel = (data,fileName) => {
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+    const FileName = fileName +".xlsx";
+    XLSX.writeFile(workbook, FileName);
+  };
   useEffect(() => {
-    if (startProcess && files && files.length) {
-      if (!files) return alert("Enter a valid file");
-      const reader = new FileReader();
-      reader.onload = async ({ target }) => {
-          const csv = Papa.parse(target.result, {
-              header: true
-          });
-          const parsedData = csv?.data
-          setListOfTotalData(parsedData)
-          const searchInput = inputList.split(",")?.map((splitedItem) => splitedItem.trim())
-          const includedColumnsInExcelList = includedColumnsInExcel.split(",")?.map((splitedItem) => splitedItem.trim())
-          const finalList = []
-          parsedData.forEach((item) => {
-            const valuesList = Object.values(item)
-            let findItem = false;
-              searchInput.forEach((searchItem) => {
-                if (!findItem) {
-                  if (searchItem.toLowerCase() && valuesList.toString().toLowerCase().includes(searchItem.toLowerCase())) {
-                    findItem = true;
-                  }
-                }
-              })
-              if (findItem) {
-                let finalObject = {}
-                if (includedColumnsInExcel && includedColumnsInExcelList.length) {
-                  includedColumnsInExcelList.forEach((columnName) => {
-                    if (item.hasOwnProperty(columnName)) {
-                      finalObject[columnName] = item[columnName]
+    if (startProcess) {
+      if (files && files.length) {
+        const reader = new FileReader();
+        reader.onload = async ({ target }) => {
+            const csv = Papa.parse(target.result, {
+                header: true
+            });
+            const parsedData = csv?.data
+            setListOfTotalData(parsedData)
+            const searchInput = inputList.split(",")?.map((splitedItem) => splitedItem.trim())
+            const includedColumnsInExcelList = includedColumnsInExcel.split(",")?.map((splitedItem) => splitedItem.trim())
+            const finalList = []
+            parsedData.forEach((item) => {
+              const valuesList = Object.values(item)
+              let findItem = false;
+                searchInput.forEach((searchItem) => {
+                  if (!findItem) {
+                    if (searchItem.toLowerCase() && valuesList.toString().toLowerCase().includes(searchItem.toLowerCase())) {
+                      findItem = true;
                     }
-                  })
-                } else {
-                  finalObject = item
+                  }
+                })
+                if (findItem) {
+                  let finalObject = {}
+                  if (includedColumnsInExcel && includedColumnsInExcelList.length) {
+                    includedColumnsInExcelList.forEach((columnName) => {
+                      if (item.hasOwnProperty(columnName)) {
+                        finalObject[columnName] = item[columnName]
+                      }
+                    })
+                  } else {
+                    finalObject = item
+                  }
+                  finalList.push(finalObject);
                 }
-                finalList.push(finalObject);
-              }
-          })
-          setFilteredData(finalList)
-          const fullPath = files[0].name;
-          setFileName(fullPath.substring(0, fullPath.lastIndexOf('.')) || fullPath)
-          setEnableDownload(true)
-      };
-      reader.addEventListener('progress', function(e){
-        var progress_width = Math.ceil(e.loaded/e.total * 100);
-        setPercent(progress_width)
-      }, true);
-      reader.readAsText(files[0]);
+            })
+            setFilteredData(finalList)
+            const fullPath = files[0].name;
+            setFileName(fullPath.substring(0, fullPath.lastIndexOf('.')) || fullPath)
+            toast('Content filtered successfully', {
+              position: "top-right",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: false,
+              pauseOnHover: false,
+              theme: "light",
+            });
+            setEnableDownload(true)
+        };
+        reader.addEventListener('progress', function(e){
+          var progress_width = Math.ceil(e.loaded/e.total * 100);
+          setPercent(progress_width)
+        }, true);
+        reader.readAsText(files[0]);
+        setStartProcess(false)
+      } else {
+          toast.error('Enter a valid file', {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: false,
+            progress: undefined,
+            theme: "light",
+          });
+      }
     }
-  }, [startProcess]);
+  }, [startProcess])
+  
   useEffect(() => {
-    if (csvColumnsList && window.localStorage.getItem(csvColumnsList)) {
-      setIncludedColumnsInExcel(window.localStorage.getItem(csvColumnsList))
+    if (csvColumnsList) {
+      if (window.localStorage.getItem(csvColumnsList)) {
+        setIncludedColumnsInExcel(window.localStorage.getItem(csvColumnsList))
+      } else {
+        setIncludedColumnsInExcel("")
+      }
     }
   }, [csvColumnsList])
+  
   return (
-    <Card variation="elevated">
+    <>
+    <ToastContainer />
+    <Card variation="elevated" padding="2rem">
       <Card
         backgroundColor={tokens.colors.primary[80]}
         color={tokens.colors.white}
         columnStart="1"
-        columnEnd="-1"
+        columnEnd="-1" 
       >
         <Flex
           direction="column"
@@ -150,12 +197,7 @@ const AmplifyFilterFeeds = () => {
         rowGap="0.5rem"
         templateColumns="1fr 1fr 1fr"
       >
-        <Card columnStart="1" columnEnd="-1">
-          <View marginBottom="1rem">
-            <Heading level={3} color={tokens.colors.primary[90]}>
-              Input Section
-            </Heading>
-          </View>
+        <Card columnStart="1" columnEnd="-1" padding="1rem 0">
           <DropZone
             acceptedFileTypes={allowedExtensions}
             onDropComplete={({ acceptedFiles, rejectedFiles }) => {
@@ -184,24 +226,29 @@ const AmplifyFilterFeeds = () => {
             <Text key={file?.name}>{file?.name}</Text>
           ))}
           {csvColumnsList?.length ?
-            <Flex direction="column" margin="1rem 0">
-              <Text><b>Existing Columns In CSV :</b> {csvColumnsList}</Text>
-            </Flex>
+            <Card  variation="elevated" marginTop="15px" marginBottom="15px">
+              <Heading level={5} alignSelf={"flex-start"} style={{"text-align":"left"}} >
+                Existing Columns In CSV
+              </Heading>
+              <Text style={{"text-align":"left"}}>{csvColumnsList}</Text>
+            </Card>
           : null}
-          <Flex direction="column" margin="1rem 0">
-            <Text>Output Columns : </Text>
-            <Input placeholder="Add comma seperated columns name" value={includedColumnsInExcel} onChange={(e) => {
-                if (csvColumnsList) {
-                  window.localStorage.setItem(csvColumnsList, e.target.value);
+          <Grid  columnGap="2rem" templateColumns={{ base: '1fr', large: '1fr 1fr' }} direction="row" margin="2rem 0">
+            <View >
+              <Text style={{"text-align":"left"}} fontWeight="600">Output Columns</Text>
+              <TextAreaField placeholder="Add comma seperated columns name" style={{"text-align":"left"}} rows={2} value={includedColumnsInExcel} onChange={(e) => {
+                  if (csvColumnsList) {
+                    window.localStorage.setItem(csvColumnsList, e.target.value);
+                  }
+                  setIncludedColumnsInExcel(e.target.value)
                 }
-                setIncludedColumnsInExcel(e.target.value)
-              }
-            }/>
-          </Flex>
-          <Flex direction="column" margin="1rem 0">
-            <Text>Keywords : </Text>
-            <Input placeholder="Add comma seperated keywords" value={inputList} onChange={(e) => { window.localStorage.setItem("keywords", e.target.value); setInputList(e.target.value)}}/>
-          </Flex>
+              }/>
+            </View>
+            <View>
+              <Text style={{"text-align":"left"}} fontWeight="600">Keywords</Text>
+              <TextAreaField placeholder="Add comma seperated keywords" style={{"text-align":"left"}} rows={2} value={inputList} onChange={(e) => { window.localStorage.setItem("keywords", e.target.value); setInputList(e.target.value)}}/>
+            </View>
+          </Grid>
           <Flex
             direction="row"
             justifyContent="space-between"
@@ -250,7 +297,6 @@ const AmplifyFilterFeeds = () => {
           </Flex>
           <Button
             variation="primary"
-            // colorTheme="info"
             loadingText=""
             disabled = {!enableDownload}
             onClick={() => exportToExcel(filteredData, fileName)}
@@ -261,6 +307,7 @@ const AmplifyFilterFeeds = () => {
         </Card>
       </Grid>
     </Card>
+    </>
   );
 };
 
