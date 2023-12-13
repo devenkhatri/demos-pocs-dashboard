@@ -141,7 +141,7 @@ const AmplifyFilterFeeds = () => {
           setFilteredData(finalList)
           const fullPath = files[0].name;
           setFileName(fullPath.substring(0, fullPath.lastIndexOf('.')) || fullPath)
-          toast('File Successfully Created, Click on download button to get file', {
+          toast('Content filtered successfully', {
             position: "top-right",
             autoClose: 3000,
             hideProgressBar: false,
