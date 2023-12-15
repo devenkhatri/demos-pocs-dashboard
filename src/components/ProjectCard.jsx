@@ -5,6 +5,8 @@ import { FaArrowRight } from "react-icons/fa";
 import _ from "lodash";
 import { useEffect,useState } from 'react';
 import { useNavigate } from "react-router-dom";
+import Markdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 
 export const ProjectCard = ({ index, title, url, description, services, tags, id, updatedDate }) => {
@@ -59,13 +61,15 @@ export const ProjectCard = ({ index, title, url, description, services, tags, id
             : null}
             <Divider border="2px solid #e94184" width={"50px"} marginBottom="10px" />
             <Text style={{"text-align" : "left"}}>
-              {_.truncate( 
-                description, { 
-                   'length': 140, 
-                   'omission': '...'
-                 }
-                )
-              }
+              <Markdown remarkPlugins={[remarkGfm]}>
+                {_.truncate( 
+                  description, { 
+                     'length': 140, 
+                     'omission': '...'
+                   }
+                  )
+                }
+              </Markdown>
             </Text>
           </View>
           <Flex>
