@@ -17,6 +17,8 @@ import * as queries from '../graphql/queries';
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Markdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 const ProjectDetails = () => {
   const { id } = useParams();
   const [projectData, setProjectData] = useState();
@@ -82,7 +84,9 @@ const ProjectDetails = () => {
                 </Flex>
               : null}
               <Divider />
-              <Text textAlign={"left"}>{projectData?.description}</Text>
+              <Text textAlign={"left"}>
+                <Markdown remarkPlugins={[remarkGfm]}>{projectData?.description}</Markdown>
+              </Text>
               {projectData?.services_used?.length > 0 && projectData?.services_used[0] !== "" ?
               <>
                 <Heading level={5} alignSelf={"flex-start"} marginTop={"20px"}>
@@ -117,7 +121,9 @@ const ProjectDetails = () => {
                   Problem Statement
                 </Heading>
                 <Divider border="2px solid #e94184" width={"50px"} />
-                <Text textAlign={"left"}>{projectData?.problem_statement}</Text>
+                <Text textAlign={"left"}>
+                  <Markdown remarkPlugins={[remarkGfm]}>{projectData?.problem_statement}</Markdown>
+                </Text>
               </>
               : null}
               {projectData?.solution || projectData?.solution_diagram ?
@@ -138,7 +144,9 @@ const ProjectDetails = () => {
                       alt="Solution diagram image."
                     />
                   : null}
-                  <Text textAlign={"left"}>{projectData?.solution || ""}</Text>
+                  <Text textAlign={"left"}>
+                    <Markdown remarkPlugins={[remarkGfm]}>{projectData?.solution}</Markdown>
+                  </Text>
                 </Grid>
               </>
               : null}

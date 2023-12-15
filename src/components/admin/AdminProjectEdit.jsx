@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { updateProjects } from '../../graphql/mutations';
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
+import MDEditor from '@uiw/react-md-editor';
 
 const AdminProjectEdit = () => {
     const navigate = useNavigate();
@@ -129,9 +130,18 @@ const AdminProjectEdit = () => {
                                 <Label htmlFor="services_used">Services Used</Label>
                                 <Input id="services_used" name="services_used" value={projectServicesUsed} width="100%" onChange={(e) => setProjectServicesUsed(e.target.value)} />
                             </>
-                            <TextAreaField label="Description" defaultValue={projectDescription} id="description" name="description" onChange={(e) => setProjectDescription(e.target.value)} />
-                            <TextAreaField label="Problem Statement" defaultValue={projectProblemStatement} id="problem_statement" name="problem_statement" onChange={(e) => setProjectProblemStatement(e.target.value)} />
-                            <TextAreaField label="Solution" defaultValue={projectSolution} id="solution" name="solution" onChange={(e) => setProjectSolution(e.target.value)} />
+                            <>
+                                <Label htmlFor="description">Description</Label>
+                                <MDEditor value={projectDescription} id="description" name="description" onChange={setProjectDescription} />
+                            </>
+                            <>
+                                <Label htmlFor="problem_statement">Problem Statement</Label>
+                                <MDEditor value={projectProblemStatement} id="problem_statement" name="problem_statement" onChange={setProjectProblemStatement} />
+                            </>
+                            <>
+                                <Label htmlFor="solution">Solution</Label>
+                                <MDEditor value={projectSolution} id="solution" name="solution" onChange={setProjectSolution} />
+                            </>
                             <>
                                 <Label htmlFor="solution_diagram">Solution Diagram URL</Label>
                                 <Input id="solution_diagram" name="solution_diagram" value={projectSolutionDiagram} width="100%" onChange={(e) => setProjectSolutionDiagram(e.target.value)} />
