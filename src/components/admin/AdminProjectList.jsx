@@ -5,11 +5,13 @@ import * as queries from '../../graphql/queries';
 import React, { useEffect,useState } from 'react';
 import { ProjectCard } from '../ProjectCard';
 import _ from "lodash";
-import { Collection, Loader, Flex, Button, Table, TableCell,  TableBody,  TableHead,  TableRow, SwitchField} from "@aws-amplify/ui-react";
-import { FaPencilAlt } from "react-icons/fa";
-import { updateProjects } from '../../graphql/mutations';
+import { View, Collection, Loader, Flex, Button, Table, TableCell,  TableBody,  TableHead,  TableRow, SwitchField} from "@aws-amplify/ui-react";
+import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
+import { updateProjects, deleteProjects } from '../../graphql/mutations';
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
+import { FaArrowRight } from "react-icons/fa";
+import {Link } from 'react-router-dom';
 
 
 const AdminProjectList = ({  user }) => {
@@ -40,11 +42,44 @@ const AdminProjectList = ({  user }) => {
         setData(allProjects.data.listProjects.items);
       }
     }
-    const editeNavigate = (id) => {
-        setRedirectId(id)
-        setRedirect(true)
-    }
     
+    const deleteProcess = (deleteprojectId) => {
+      if (window.confirm("Delete the Project?")) {
+        if(deleteprojectId){
+          client.graphql({
+            query: deleteProjects,
+            variables: {
+              input: {
+                id: deleteprojectId,
+              }
+            }
+          }).then(() => {
+            toast(`🦄 Project Successfully Deleted`, {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                // draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+            getAllProjects();
+          }).catch(() => {
+            toast.error('Something Went Wrong!', {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                // draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+          });
+        }
+      }
+    }
     const disableProcess = (disableprojectId, disableSwitch) => {
       let disabledItemsList = [...editingItems]
       if (disableprojectId && !disabledItemsList.includes(disableprojectId)) {
@@ -111,6 +146,12 @@ const AdminProjectList = ({  user }) => {
             <Loader size="large"  width="5rem" height="5rem"/>
           </Flex>
       :
+        <>
+        <Flex style ={{"max-width": "50rem", "margin": "10px auto", "width": "100%"}} direction="column" justifyContent="flex-end"  alignItems="flex-end"  alignContent="flex-end" wrap="nowrap" gap="0rem" >
+          <Link className="custom_visti_project_btn" variation="link" to={"/rxc345-add/"}>
+               Add Project &nbsp; <FaArrowRight />
+          </Link>
+        </Flex>
         <Table style ={{"max-width": "50rem", "margin": "0 auto", "width": "100%"}} highlightOnHover={true}>
           <TableHead>
             <TableRow>
@@ -131,6 +172,9 @@ const AdminProjectList = ({  user }) => {
                     <Button variation="link" style={{"border":"none"}} onClick={() => setRedirect(item.id)}>
                       <FaPencilAlt />
                     </Button>
+                    <Button variation="link" style={{"border":"none"}} onClick={() => deleteProcess(item.id)}>
+                      <FaTrashAlt />
+                    </Button>
                   </TableCell>
                 </TableRow>
               )
@@ -138,6 +182,7 @@ const AdminProjectList = ({  user }) => {
           }
          </TableBody>
     </Table>
+    </>
     }
   </>
   );
