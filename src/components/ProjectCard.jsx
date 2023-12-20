@@ -1,34 +1,12 @@
-import { Link } from "react-router-dom";
-import { dataList } from './../assets/dummy.js';
+import {Link } from 'react-router-dom';
 import { Badge, Flex, Heading, Button, Text, Card, View, Divider } from "@aws-amplify/ui-react";
 import { FaArrowRight } from "react-icons/fa";
 import _ from "lodash";
-import { useEffect,useState } from 'react';
-import { useNavigate } from "react-router-dom";
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
 
 export const ProjectCard = ({ index, title, url, description, services, tags, id, updatedDate }) => {
-  //var date = updtedDate
-  // searchItems.push(title);
-  const navigate = useNavigate();
-  const [redirectToEdit, setRedirectToEdit] = useState("");
-  const [redirectToDemo, setRedirectToDemo] = useState("");
-  
-  useEffect(() => {
-     if (redirectToEdit){
-        return navigate("/project-details/"+redirectToEdit);
-     }
-  },[redirectToEdit]); 
-  
-  useEffect(() => {
-     if (redirectToDemo){
-        return navigate(url);
-     }
-  },[redirectToDemo]); 
- 
- 
   return (
     <Card
       key={index}
@@ -74,13 +52,13 @@ export const ProjectCard = ({ index, title, url, description, services, tags, id
           </View>
           <Flex>
           {url &&
-            <Button  className="custom_visti_project_btn"  onClick={() => setRedirectToDemo(id)}>
+            <Link  className="custom_visti_project_btn" to={url}>
                 Visit Demo &nbsp; <FaArrowRight />
-            </Button>
+            </Link>
           }
-           <Button className="custom_visti_project_btn" variation="link" onClick={() => setRedirectToEdit(id)}>
+           <Link className="custom_visti_project_btn" variation="link" to={"/project-details/" + id}>
                Visit Project &nbsp; <FaArrowRight />
-          </Button>
+          </Link>
           </Flex>
           
         </Flex>
