@@ -6,12 +6,10 @@ import {
   Flex,
   Grid,
   Heading,
-  Input,
   Text,
   View,
   VisuallyHidden,
   useTheme,
-  Divider,
   TextAreaField
 } from "@aws-amplify/ui-react";
 import { MdOutlineFileUpload } from "react-icons/md";

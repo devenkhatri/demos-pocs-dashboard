@@ -5,7 +5,7 @@ import * as XLSX from 'xlsx';
 import { ToastContainer, toast } from 'react-toastify';
 const allowedExtensions = ["csv"];
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import './pulsebootstrap.min.css'
 const BootstrapFilterFeeds = () => {
   const [files, setFiles] = React.useState([]);
   const [listOfTotalData, setListOfTotalData] = React.useState([]);
@@ -260,11 +260,11 @@ const BootstrapFilterFeeds = () => {
               </div>
             </Col>
             <Col xs={7} sm={10} className="pe-0 align-self-center">
-              <ProgressBar now={percent} variant="info" animated/>
+              <ProgressBar now={percent} variant="info"/>
             </Col>
           </Row>
         </Card>
-        <Card border="0" className="mt-4" style={{"background" : "#E9F9FC"}}>
+        <Card border="0" className="mt-4" style={{"background" : "#edecec"}}>
           <Row className="justify-content-center">
             <h2>Output Section</h2>
             <p>The generated excel file can be downloaded from here once the process is completed</p>
