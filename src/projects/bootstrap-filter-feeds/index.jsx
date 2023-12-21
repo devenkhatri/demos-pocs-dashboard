@@ -5,9 +5,13 @@ import * as XLSX from 'xlsx';
 import { ToastContainer, toast } from 'react-toastify';
 const allowedExtensions = ["csv"];
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './pulsebootstrap.min.css'
+import './pulsebootstrap.min.css';
+
 const BootstrapFilterFeeds = () => {
   const [files, setFiles] = React.useState([]);
+  const [fileLoadedCompleted ,setFileLoadedCompleted] = React.useState(false);
+  const [fileUploadedData, setFileUploadedData] = React.useState("");
+  const [totalFileLength, setTotalFileLength] = React.useState(0);
   const [listOfTotalData, setListOfTotalData] = React.useState([]);
   const [filteredData, setFilteredData] = React.useState([]);
   const [startProcess, setStartProcess] = React.useState(false);
@@ -30,6 +34,15 @@ const BootstrapFilterFeeds = () => {
     const parts = filename.split('.');
     return parts[parts.length - 1];
   }
+  const toastOptions = {
+    position: "top-right",
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: false,
+    pauseOnHover: false,
+    progress: undefined,
+    theme: "light"
+  }
   const onFilePickerChange = (event) => {
     resetAllData()
     const { files } = event.target;
@@ -37,20 +50,11 @@ const BootstrapFilterFeeds = () => {
       return;
     }
     if (!allowedExtensions.includes(getExtension(files[0].name))) {
-      toast.error('Please Upload CSV File Only', {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: false,
-        progress: undefined,
-        theme: "light",
-      });
+      toast.error('Please Upload CSV File Only', toastOptions);
       return;
     }
     const fullPath = files[0].name;
-    setFileName(fullPath.substring(0, fullPath.lastIndexOf('.')) || fullPath)
-
+    setFileName(fullPath.substring(0, fullPath.lastIndexOf('.')) || fullPath);
     const reader = new FileReader();
     reader.onload = ({ target }) => {
       Papa.parse(target.result, {
@@ -63,11 +67,15 @@ const BootstrapFilterFeeds = () => {
           results = null;
         },
         complete: function(results) {
+          setTotalFileLength(target?.result?.length || 0)
           results = null;
         }
       });
     };
     reader.readAsText(files[0]);
+    setPercent(0);
+    setFileLoadedCompleted(false);
+    setFileUploadedData("")
     setFiles(Array.from(files));
   };
   const exportToExcel = (data, fileName) => {
@@ -77,74 +85,77 @@ const BootstrapFilterFeeds = () => {
     const FileName = fileName + ".xlsx";
     XLSX.writeFile(workbook, FileName);
   };
+  useEffect(()=> {
+    if (fileLoadedCompleted) {
+      const csv = Papa.parse(fileUploadedData, {
+        header: true
+      });
+      const parsedData = csv?.data
+      const searchInput = inputList.split(",")?.map((splitedItem) => splitedItem.trim())
+      const includedColumnsInExcelList = includedColumnsInExcel.split(",")?.map((splitedItem) => splitedItem.trim())
+      const finalList = []
+      parsedData.forEach((item) => {
+        const valuesList = Object.values(item)
+        let findItem = false;
+        searchInput.forEach((searchItem) => {
+          if (!findItem) {
+            if (searchItem.toLowerCase() && valuesList.toString().toLowerCase().includes(searchItem.toLowerCase())) {
+              findItem = true;
+            }
+          }
+        })
+        if (findItem) {
+          let finalObject = {}
+          if (includedColumnsInExcel && includedColumnsInExcelList.length) {
+            includedColumnsInExcelList.forEach((columnName) => {
+              if (item.hasOwnProperty(columnName)) {
+                finalObject[columnName] = item[columnName]
+              }
+            })
+          }
+          else {
+            finalObject = item
+          }
+          finalList.push(finalObject);
+        }
+      })
+      setListOfTotalData(parsedData)
+      setFilteredData(finalList)
+      const fullPath = files[0].name;
+      setFileName(fullPath.substring(0, fullPath.lastIndexOf('.')) || fullPath)
+      toast('Content filtered successfully', toastOptions);
+      setEnableDownload(true)
+    }
+  },[fileLoadedCompleted])
   useEffect(() => {
     if (startProcess) {
       if (files && files.length) {
+        const file = files[0];
+        let CHUNK_SIZE = 100 * 512 * 1024;
+        let offset = 0;
         const reader = new FileReader();
-        reader.onload = async ({ target }) => {
-          const csv = Papa.parse(target.result, {
-            header: true
-          });
-          const parsedData = csv?.data
-          setListOfTotalData(parsedData)
-          const searchInput = inputList.split(",")?.map((splitedItem) => splitedItem.trim())
-          const includedColumnsInExcelList = includedColumnsInExcel.split(",")?.map((splitedItem) => splitedItem.trim())
-          const finalList = []
-          parsedData.forEach((item) => {
-            const valuesList = Object.values(item)
-            let findItem = false;
-            searchInput.forEach((searchItem) => {
-              if (!findItem) {
-                if (searchItem.toLowerCase() && valuesList.toString().toLowerCase().includes(searchItem.toLowerCase())) {
-                  findItem = true;
-                }
-              }
-            })
-            if (findItem) {
-              let finalObject = {}
-              if (includedColumnsInExcel && includedColumnsInExcelList.length) {
-                includedColumnsInExcelList.forEach((columnName) => {
-                  if (item.hasOwnProperty(columnName)) {
-                    finalObject[columnName] = item[columnName]
-                  }
-                })
-              }
-              else {
-                finalObject = item
-              }
-              finalList.push(finalObject);
-            }
-          })
-          setFilteredData(finalList)
-          const fullPath = files[0].name;
-          setFileName(fullPath.substring(0, fullPath.lastIndexOf('.')) || fullPath)
-          toast('Content filtered successfully', {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: false,
-            pauseOnHover: false,
-            theme: "light",
-          });
-          setEnableDownload(true)
+        let fileUploadedDataList = "";
+        reader.onload = async function(event) {
+          if (event?.target?.result && event?.target?.result?.length > 0) {
+              fileUploadedDataList += event?.target?.result;
+              offset += CHUNK_SIZE;
+              const percentageCal = fileUploadedDataList.length / totalFileLength * 100 
+              setPercent(Math.ceil(percentageCal))
+              readNext();
+          } else {
+              setFileUploadedData(fileUploadedDataList)
+              setFileLoadedCompleted(true)
+          }
         };
-        reader.addEventListener('progress', function(e) {
-          var progress_width = Math.ceil(e.loaded / e.total * 100);
-          setPercent(progress_width)
-        }, true);
-        reader.readAsText(files[0]);
+         const readNext = () => {
+            let slice = file.slice(offset, offset + CHUNK_SIZE);
+            reader.readAsText(slice);
+        }
+        readNext();
         setStartProcess(false)
       }
       else {
-        toast.error('Enter a valid file', {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: false,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.error('Enter a valid file', toastOptions);
       }
     }
   }, [startProcess])
@@ -180,7 +191,7 @@ const BootstrapFilterFeeds = () => {
             <p>Drag 'n' Drop csv file here or click to select file</p>
             <Button variant="secondary" onClick={() => {document.getElementById("file-upload").click()}}>
               <p className="m-0" style={{"paddingInlineStart": "0.3rem"}}> 
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-upload" viewBox="0 0 16 16">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-upload" viewBox="0 0 16 16">
                   <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"/>
                   <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708z"/>
                 </svg> Choose File
@@ -198,7 +209,7 @@ const BootstrapFilterFeeds = () => {
           </Card.Body>
         </Card>
         {files.map((file) => (
-            <p className="mb-0" key={file?.name}>{file?.name}</p>
+            <p className="mb-0" key={file?.name}>{file?.name || ""}</p>
         ))}
         {csvColumnsList?.length ?
             <Card className="mt-3 shadow bg-body rounded border-0">
@@ -264,7 +275,7 @@ const BootstrapFilterFeeds = () => {
             </Col>
           </Row>
         </Card>
-        <Card border="0" className="mt-4" style={{"background" : "#edecec"}}>
+        <Card border="0" className="mt-4 bg-primary bg-opacity-10">
           <Row className="justify-content-center">
             <h2>Output Section</h2>
             <p>The generated excel file can be downloaded from here once the process is completed</p>
