@@ -3,9 +3,9 @@ import { Button, ProgressBar, Card, Form, Container, Row, Col } from 'react-boot
 import Papa from "papaparse";
 import * as XLSX from 'xlsx';
 import { ToastContainer, toast } from 'react-toastify';
-const allowedExtensions = ["csv"];
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './pulsebootstrap.min.css';
+const allowedExtensions = ["csv"];
 
 const BootstrapFilterFeeds = () => {
   const [files, setFiles] = React.useState([]);
@@ -129,6 +129,9 @@ const BootstrapFilterFeeds = () => {
   },[fileLoadedCompleted])
   useEffect(() => {
     if (startProcess) {
+      setPercent(0);
+      setFileLoadedCompleted(false)
+      setEnableDownload(false)
       if (files && files.length) {
         const file = files[0];
         let CHUNK_SIZE = 100 * 512 * 1024;
@@ -159,6 +162,12 @@ const BootstrapFilterFeeds = () => {
       }
     }
   }, [startProcess])
+  
+  useEffect(()=> {
+    if (percent === 100 && startProcess) {
+      setStartProcess(false)
+    }
+  }, [percent])
 
   useEffect(() => {
     if (csvColumnsList) {
@@ -184,7 +193,7 @@ const BootstrapFilterFeeds = () => {
           </h1>
         </Card>
         <Card
-          className="mt-3 border-2"
+          className="mt-3 border-2 py-4"
           style={{ "borderStyle" : "dotted"}}
         >
           <Card.Body>
@@ -270,12 +279,12 @@ const BootstrapFilterFeeds = () => {
                 </Button>
               </div>
             </Col>
-            <Col xs={7} sm={10} className="pe-0 align-self-center">
+            <Col xs={7} sm={10} className="pe-0 align-self-center" key={percent}>
               <ProgressBar now={percent} variant="info"/>
             </Col>
           </Row>
         </Card>
-        <Card border="0" className="mt-4 bg-primary bg-opacity-10">
+        <Card border="0" className="mt-4 bg-primary bg-opacity-10 py-4">
           <Row className="justify-content-center">
             <h2>Output Section</h2>
             <p>The generated excel file can be downloaded from here once the process is completed</p>
