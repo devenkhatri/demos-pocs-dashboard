@@ -22,4 +22,5 @@ function App( {user }) {
   );
 }
 
-export default withAuthenticator(App);
+//export default withAuthenticator(App); //removing auth temporarily
+export default App;
