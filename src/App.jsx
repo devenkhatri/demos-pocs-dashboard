@@ -8,7 +8,7 @@ import Footer from './components/Footer';
 import RoutesList from './RoutesList';
 import "./App.css";
 import "@aws-amplify/ui-react/styles.css";
-Amplify.configure(config);
+// Amplify.configure(config);
 
 function App( {user }) {
   return (
@@ -22,5 +22,5 @@ function App( {user }) {
   );
 }
 
-export default withAuthenticator(App); 
-// export default App;
+// export default withAuthenticator(App); 
+export default App;

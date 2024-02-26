@@ -24,9 +24,9 @@ const Header = ({ user }) => {
     const { tokens } = useTheme();
     const [username, setUsername] = useState(user?.username);
 
-    useEffect(()=>{
-        fetchUserAttributes().then((userAttributes) => setUsername(userAttributes.name))
-    },[]);
+    // useEffect(()=>{
+    //     fetchUserAttributes().then((userAttributes) => setUsername(userAttributes.name))
+    // },[]);
     
     return (
         <View className="header">

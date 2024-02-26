@@ -14,23 +14,23 @@ const ProjectList = () => {
   const [searchKeyword, setSearchKeyword] = React.useState('');
   
   const getAllProjects = async () => {
-    const allProjects = await client.graphql({
-      query: queries.listProjects,
-      variables: {
-        filter: {
-          isdisabled: {
-            ne: true
-          }
-        }
-      }
-    });
-    console.log("******** allProjects....", allProjects);
+    // const allProjects = await client.graphql({
+    //   query: queries.listProjects,
+    //   variables: {
+    //     filter: {
+    //       isdisabled: {
+    //         ne: true
+    //       }
+    //     }
+    //   }
+    // });
+    // console.log("******** allProjects....", allProjects);
     setLoading(false)
-    if (allProjects?.data?.listProjects?.items) {
-      const filteredData = _.orderBy(allProjects.data.listProjects.items, ['updatedAt'], ['desc']);
-      console.log("filteredData >", filteredData)
-      setData(filteredData);
-    }
+    // if (allProjects?.data?.listProjects?.items) {
+    //   const filteredData = _.orderBy(allProjects.data.listProjects.items, ['updatedAt'], ['desc']);
+    //   console.log("filteredData >", filteredData)
+    //   setData(filteredData);
+    // }
   }
 
 
