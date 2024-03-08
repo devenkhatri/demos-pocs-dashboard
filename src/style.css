@@ -340,3 +340,12 @@ a:focus {
 a {
   text-decoration: unset;
 }
+.custom_articleBody blockquote{
+  margin-left: 0px;
+}
+.custom_articleBody ul, .custom_articleBody ol{
+  margin-left: 15px;
+}
+.custom_total{
+    float: left;
+}

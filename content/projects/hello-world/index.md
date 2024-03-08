@@ -3,12 +3,11 @@ title: Hello World
 date: "2015-05-01T22:12:03.284Z"
 demolink: ""
 description: "Hello World"
-isDisable: false
-postImage: "salty_egg.jpg"
-tags: 
-     - AWS
-     - Amplify
+isDisable: true
+postImage: "./salty_egg.jpg"
+tags:  ["AWS", "Amplify","Contentful"]
 test: "check"
+services: ["Cloud9", "Bootstrap"]
 ---
 
 This is my first post on my new fake blog! How exciting!

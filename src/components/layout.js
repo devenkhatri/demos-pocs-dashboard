@@ -3,12 +3,9 @@ import { Link } from "gatsby"
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import { Link as MuiLink} from '@mui/material/Link';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
+import { StaticImage } from "gatsby-plugin-image"
 
 const Layout = ({ location, title, children }) => {
   const rootPath = `${__PATH_PREFIX__}/`
@@ -31,7 +28,7 @@ const Layout = ({ location, title, children }) => {
 
   return (
     <>
-      <AppBar position="fixed" color="transparent">
+       <AppBar position="fixed" style={{"background": "white"}} >
           <Toolbar backgroundColor="white">
               <Typography
                   variant="h6"
@@ -41,7 +38,7 @@ const Layout = ({ location, title, children }) => {
                   as ="a"
                   href={"/"}
               >
-                 <img src="/assets/tcs_logo.png" height="60px"/>
+                <StaticImage src="../images/tcs_logo.png" alt="TCS" layout="fixed"height={60}/>
               </Typography>   
           </Toolbar>
       </AppBar>

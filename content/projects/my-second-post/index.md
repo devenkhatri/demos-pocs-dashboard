@@ -3,8 +3,9 @@ title: My Second Post!
 date: "2015-05-06T23:46:37.121Z"
 demolink: "/demo2"
 isDisable: false
-postImage: "demo_pic.jpg"
+postImage: "./demo_pic.jpg"
 tags: ["AWS", "Amplify"]
+services: ["Cloud9", "Bootstrap"]
 ---
 
 Wow! I love blogging so much already.

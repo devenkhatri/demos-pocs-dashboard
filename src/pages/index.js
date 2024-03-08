@@ -1,5 +1,5 @@
 import * as React from "react"
-import { Link, graphql } from "gatsby"
+import { graphql } from "gatsby"
 
 import Bio from "../components/bio"
 import Layout from "../components/layout"
@@ -11,7 +11,6 @@ import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import {Link as MuiLink} from '@mui/material';
-import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import SearchIcon from '@mui/icons-material/Search';
@@ -21,9 +20,8 @@ import Chip from '@mui/material/Chip';
 import {useState} from "react";
 import { GatsbyImage, getImage } from "gatsby-plugin-image"
 
-const CardDetail = ({ title, desc, detailUrl, demoUrl, postImage, tags }) => {
+const CardDetail = ({ title, desc, detailUrl, demoUrl, postImage, tags, services, date }) => {
   let featuredImg = getImage(postImage)
-
   return (
     <Card sx={{ maxWidth: 345 }}>
       {/*postImage && <CardMedia
@@ -32,18 +30,30 @@ const CardDetail = ({ title, desc, detailUrl, demoUrl, postImage, tags }) => {
         image={postImage}
         
       />*/}
-      <GatsbyImage image={featuredImg} />
+      <GatsbyImage image={featuredImg} style={{width:"100%", height: "200px", objectFit: "cover"}} />
       <CardContent>
-        <Typography as="a" variant="body2" href={detailUrl} gutterBottom variant="h5" component="div">
-          {title}
+        
+        <Typography as="a" href={detailUrl} gutterBottom variant="h5" component="div">
+            {title}
         </Typography>
-        <Stack direction="row" spacing={1}>
+        <Typography variant="overline" display="block" gutterBottom>
+           {date}
+        </Typography>
+        
+        <Box sx={{ flexDirection: 'row'}} >
         {tags && tags.map((tag) => {
-          <Chip label={tag} color="primary" variant="outlined" />
+          return(
+            <Chip label={tag} color="primary" size="small" sx = {{mr :0.5, mb:0.5 }} />
+            )
         })}
-        </Stack>
-        <Typography variant="body2" color="text.secondary">
-          <p style={{marginBottom : 0}}>{desc}</p>
+        {services && services.map((service) => {
+          return(
+            <Chip label={service} color="secondary" size="small" sx = {{mr :0.5, mb:0.5 }} />
+            )
+        })}
+        </Box>
+        <Typography variant="body2" color="text.secondary" style={{textAlign: "justify"}}>
+          {desc}
         </Typography>
       </CardContent>
       <CardActions sx={{ justifyContent: 'space-between', float: 'right' }}>
@@ -124,7 +134,8 @@ const BlogIndex = ({ data, location }) => {
         const filterPosts = posts.filter((listItem) =>{
           return listItem?.frontmatter?.title?.toLowerCase().includes(keyword.toLowerCase()) ||
           listItem?.frontmatter?.description?.toLowerCase().includes(keyword.toLowerCase()) ||
-          listItem?.frontmatter?.demolink.toLowerCase().includes(keyword.toLowerCase())
+          listItem?.frontmatter?.demolink.toLowerCase().includes(keyword.toLowerCase()) ||
+          listItem?.frontmatter?.tags.toString().toLowerCase().includes(keyword.toLowerCase())
         })
         setSearchFilter(filterPosts);
         console.log(filterPosts)
@@ -179,6 +190,13 @@ const BlogIndex = ({ data, location }) => {
     {posts.length ?
       <Layout location={location} title={siteTitle}>
       <Container>
+        <Box
+  direction="row"
+  justifyContent="center"
+  alignItems="center"
+  spacing={2}
+>
+        <Typography sx = {{mt :'10px'}} className="custom_total">Total: {searchFilter?.length}</Typography>
         <Search>
           <SearchIconWrapper>
             <SearchIcon />
@@ -189,13 +207,14 @@ const BlogIndex = ({ data, location }) => {
             onChange={(e)=>setSearchField(e)}
           />
         </Search>
+        </Box>
         {searchFilter?.length ?
         <Box my={4} sx={{ flexGrow: 2 }}>
           <Grid container spacing={2}>
             {searchFilter?.map(post => {
               return (
                 <Grid item xs={4}>
-                  <CardDetail postImage={post.frontmatter?.postImage?.childImageSharp?.gatsbyImageData || ""} demoUrl={post.frontmatter.demolink || ""} detailUrl={post.fields.slug} title={post.frontmatter.title || post.fields.slug} desc={post.frontmatter.description || post.excerpt}/>
+                  <CardDetail postImage={post.frontmatter?.postImage?.childImageSharp?.gatsbyImageData || ""} demoUrl={post.frontmatter.demolink || ""} detailUrl={post.fields.slug} title={post.frontmatter.title || post.fields.slug} desc={post.frontmatter.description || post.excerpt} tags={post.frontmatter.tags} services={post.frontmatter.services} date={post.frontmatter.date}/>
                 </Grid>
               )})
             }
@@ -255,6 +274,7 @@ export const pageQuery = graphql`
             }
           }
           tags
+          services
         }
       }
     }

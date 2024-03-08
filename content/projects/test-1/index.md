@@ -4,8 +4,9 @@ date: "2015-05-28T22:40:32.169Z"
 demolink: "/demo4"
 description: This is a custom description for SEO and Open Graph purposes, rather than the default generated excerpt. Simply add a description field to the frontmatter.
 isDisable: false
-postImage: "salty_egg.jpg"
+postImage: "./salty_egg.jpg"
 tags: ["AWS", "Amplify"]
+services: ["Cloud9", "Bootstrap"]
 ---
 
 Far far away, behind the word mountains, far from the countries Vokalia and

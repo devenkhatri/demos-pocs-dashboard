@@ -117,7 +117,6 @@ exports.createSchemaCustomization = ({ actions }) => {
       description: String
       date: Date @dateformat
       isDisable: Boolean
-      postImage: File
     }
 
     type Fields {

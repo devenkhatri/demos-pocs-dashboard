@@ -4,16 +4,13 @@ import { Link, graphql } from "gatsby"
 import Bio from "../components/bio"
 import Layout from "../components/layout"
 import Seo from "../components/seo"
+import Box from '@mui/material/Box';
+import Chip from '@mui/material/Chip';
 
 import {
   CardContent,
   Typography,
-  Button,
   Card,
-  Grid,
-  Divider,
-  Badge,
-  Box,
   Container
 } from '@mui/material';
 import { GatsbyImage, getImage } from "gatsby-plugin-image"
@@ -30,14 +27,29 @@ const BlogPostTemplate = ({
       <Container maxWidth="lg">
         <Card>
         <CardContent>
-          <Typography gutterBottom variant="h3" component="div">
+          <Typography gutterBottom variant="h4" component="div" sx = {{mb :0}}>
             {post.frontmatter.title}
           </Typography>
-          <Typography style={{ justifyContent : 'center', display : 'flex', marginBottom : '2rem'}}>
-            <GatsbyImage image={featuredImg} />
+          <Typography variant="caption" display="block">
+            {post.frontmatter.date}
           </Typography>
+          <Box sx={{ flexDirection: 'row', mb:0}} >
+          {post.frontmatter.tags && post.frontmatter.tags.map((tag) => {
+            return(
+              <Chip label={tag} color="primary" size="small" sx = {{mr :0.5, mb:0.5 }} />
+              )
+          })}
+          {post.frontmatter.services && post.frontmatter.services.map((service) => {
+            return(
+              <Chip label={service} color="secondary" size="small" sx = {{mr :0.5, mb:0.5 }}  />
+              )
+          })}
+          </Box>
+          {/*<Typography style={{ justifyContent : 'center', display : 'flex', marginBottom : '2rem'}}>
+            <GatsbyImage image={featuredImg} />
+          </Typography>*/}
           {post.frontmatter.demolink ?
-            <section style={{ paddingLeft : '1rem', paddingRight: '1rem'}}>
+            <section >
               <a href={post.frontmatter.demolink} target="_blank">Demo Link</a>
             </section>
           : null}
@@ -45,7 +57,7 @@ const BlogPostTemplate = ({
             <section
               dangerouslySetInnerHTML={{ __html: post.html }}
               itemProp="articleBody"
-              style={{ paddingLeft : '1rem', paddingRight: '1rem'}}
+              className="custom_articleBody"
             />
           </Typography>
           <hr />
@@ -165,6 +177,8 @@ export const pageQuery = graphql`
       html
       frontmatter {
         title
+        tags
+        services
         date(formatString: "MMMM DD, YYYY")
         description
         demolink
