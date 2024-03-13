@@ -30,7 +30,7 @@ const TagsPage = ({
          </Typography>
             {group.map(tag => {
               return(
-               <Link to={`/tags/${kebabCase(tag.fieldValue)}/`}>
+               <Link key={tag.fieldValue} to={`/tags/${kebabCase(tag.fieldValue)}/`}>
                   <Chip label={tag.fieldValue} color="primary"  sx = {{mr :1, mb:1}} />
                 </Link>
                 )

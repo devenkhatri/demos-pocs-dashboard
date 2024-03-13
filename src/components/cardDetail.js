@@ -24,7 +24,7 @@ const CardDetail = ({ title, desc, detailUrl, demoUrl, postImage, tags, services
   let featuredImg = getImage(postImage)
   return (
     <Card>
-      <GatsbyImage image={featuredImg} style={{width:"100%", height: "200px", objectFit: "cover"}} />
+      <GatsbyImage image={featuredImg} alt={title} style={{width:"100%", height: "200px", objectFit: "cover"}} />
       <CardContent>
         <ThemeProvider theme={theme2}>
           <Typography gutterBottom variant="h5" component="div">
@@ -37,14 +37,14 @@ const CardDetail = ({ title, desc, detailUrl, demoUrl, postImage, tags, services
         <Box sx={{ flexDirection: 'row'}} >
         {tags && tags.map((tag) => {
           return(
-           <Link to={`/tags/${kebabCase(tag)}/`}>
+           <Link key={tag} to={`/tags/${kebabCase(tag)}/`}>
               <Chip label={tag} color="primary" size="small" sx = {{mr :0.5, mb:0.5 }} />
             </Link>
             )
         })}
         {services && services.map((service) => {
           return(
-          <Link to={`/services/${kebabCase(service)}/`}>
+          <Link key={service} to={`/services/${kebabCase(service)}/`}>
             <Chip label={service} color="secondary" size="small" sx = {{mr :0.5, mb:0.5 }} />
            </Link> 
             )

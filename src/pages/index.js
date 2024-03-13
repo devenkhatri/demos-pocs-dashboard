@@ -5,7 +5,7 @@ import Bio from "../components/bio"
 import Layout from "../components/layout"
 import Seo from "../components/seo"
 import Typography from '@mui/material/Typography';
-import DemoList from "../components/demoList"
+import CardList from "../components/cardList"
 
 const BlogIndex = ({ data, location }) => {
   const siteTitle = data.site.siteMetadata?.title || `Title`
@@ -14,7 +14,7 @@ const BlogIndex = ({ data, location }) => {
     <>
     {posts.length ?
       <Layout location={location} title={siteTitle}>
-        <DemoList posts = {posts} />
+        <CardList posts = {posts} />
       </Layout>
     : <Layout location={location} title={siteTitle}>
         <Typography variant="body2" style={{display:"flex", justifyContent:"center", paddingTop : '10rem'}}>

@@ -29,7 +29,7 @@ const ServicesPage = ({
          </Typography>
              {group.map(service => {
               return(
-               <Link to={`/services/${kebabCase(service.fieldValue)}/`}>
+               <Link key={service.fieldValue} to={`/services/${kebabCase(service.fieldValue)}/`}>
                   <Chip label={service.fieldValue} color="secondary"  sx = {{mr :1, mb:1}} />
                 </Link>
                 )

@@ -14,13 +14,11 @@ const Layout = ({ location, title, children }) => {
   return (
     <>
        <AppBar position="fixed" style={{"background": "white"}} >
-          <Toolbar backgroundColor="white">
+          <Toolbar>
             <Typography
                 variant="h6"
                 component="div"
                 sx={{ flexGrow: 1 }}
-                backgroundColor="white"
-                as ="p"
             >
               <Link to="/" > 
                 <StaticImage src="../images/tcs_logo.png" alt="TCS" layout="fixed"height={60}/>
