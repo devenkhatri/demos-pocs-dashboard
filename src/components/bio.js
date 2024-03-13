@@ -30,13 +30,11 @@ const Bio = () => {
   //const social = data.site.siteMetadata?.social
 
   return (
-    <div className="bio">
+    <>
       {author?.name && (
-        <p>
-          Developed and Managed by: <strong>{author.name}</strong> {author?.summary || null}
-        </p>
+          <span>{new Date().getFullYear()} All Rights Reserved | Developed and Managed by: <strong>{author.name}</strong> {author?.summary || null}</span>
       )}
-    </div>
+    </>
   )
 }
 

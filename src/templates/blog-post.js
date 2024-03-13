@@ -6,8 +6,9 @@ import Layout from "../components/layout"
 import Seo from "../components/seo"
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
+import kebabCase from "lodash/kebabCase"
 import {Link as MuiLink} from '@mui/material';
-
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {
   CardContent,
   Typography,
@@ -20,6 +21,16 @@ const BlogPostTemplate = ({
   data: { previous, next, site, markdownRemark: post },
   location,
 }) => {
+  const theme2 = createTheme();
+  theme2.typography.h4 = {
+    fontSize: '1rem',
+    '@media (min-width:600px)': {
+      fontSize: '1.2rem',
+    },
+    [theme2.breakpoints.up('md')]: {
+      fontSize: '1.5rem',
+    },
+  };
   const siteTitle = site.siteMetadata?.title || `Title`
   //let featuredImg = getImage(post.frontmatter?.postImage?.childImageSharp?.gatsbyImageData)
   return (
@@ -28,21 +39,27 @@ const BlogPostTemplate = ({
       <Container maxWidth="lg">
         <Card>
         <CardContent>
-          <Typography gutterBottom variant="h4" component="div" sx = {{mb :0}}>
-            {post.frontmatter.title}
-          </Typography>
+          <ThemeProvider theme={theme2}>
+            <Typography gutterBottom variant="h4" component="div" sx = {{mb :0}}>
+              {post.frontmatter.title}
+            </Typography>
+          </ThemeProvider>
           <Typography variant="caption" display="block">
             {post.frontmatter.date}
           </Typography>
           <Box sx={{ flexDirection: 'row', mb:0}} >
           {post.frontmatter.tags && post.frontmatter.tags.map((tag) => {
             return(
+             <Link to={`/tags/${kebabCase(tag)}/`}>
               <Chip label={tag} color="primary" size="small" sx = {{mr :0.5, mb:0.5 }} />
+             </Link>  
               )
           })}
           {post.frontmatter.services && post.frontmatter.services.map((service) => {
             return(
-              <Chip label={service} color="secondary" size="small" sx = {{mr :0.5, mb:0.5 }}  />
+              <Link to={`/services/${kebabCase(service)}/`}>
+                <Chip label={service} color="secondary" size="small" sx = {{mr :0.5, mb:0.5 }}  />
+              </Link>
               )
           })}
           </Box>

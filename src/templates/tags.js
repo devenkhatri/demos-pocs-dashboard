@@ -3,25 +3,37 @@ import PropTypes from "prop-types"
 import DemoList from "../components/demoList"
 import Layout from "../components/layout"
 // Components
-import { Link, graphql } from "gatsby"
+import {  graphql } from "gatsby"
+
+import {Container,Box,Typography} from '@mui/material';
 
 const Tags = ({ pageContext, data, location }) => {
   console.log(">>>tags data", data)
   const { tag } = pageContext
-  const { edges, totalCount } = data.allMarkdownRemark
+  const { totalCount } = data.allMarkdownRemark
   const posts = data.allMarkdownRemark.edges;
   const siteTitle = data.allMarkdownRemark.edges.node?.frontmatter?.title
    console.log(">>>tags posts", posts)
   const tagHeader = `${totalCount} post${
     totalCount === 1 ? "" : "s"
-  } tagged with "${tag}"`
+  } tagged with tag: "${tag}"`
 
   return (
     <div>
          <Layout location={location} title={siteTitle}>
-          <h5>{tagHeader}</h5>
-         <DemoList posts={posts} />
-         <Link to="/tags">All tags</Link>
+          <Container>
+           <Box
+          direction="row"
+          justifyContent="center"
+          alignItems="center"
+          spacing={2}
+        >
+           <Typography as="h5" gutterBottom variant="h5" component="h5"  sx = {{mt :0, textAlign:"center"}}>
+             {tagHeader}
+           </Typography>
+           <DemoList posts={posts} />
+         </Box>
+         </Container>
        </Layout> 
      
       {/*<ul>

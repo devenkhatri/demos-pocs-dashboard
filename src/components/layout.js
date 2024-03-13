@@ -11,40 +11,25 @@ import Bio from "./bio"
 const Layout = ({ location, title, children }) => {
   const rootPath = `${__PATH_PREFIX__}/`
   const isRootPath = location.pathname === rootPath
-  let header
-
-  if (isRootPath) {
-    header = (
-      <h1 className="main-heading">
-        <Link to="/">{title}</Link>
-      </h1>
-    )
-  } else {
-    header = (
-      <Link className="header-link-home" to="/">
-        {title}
-      </Link>
-    )
-  }
-
   return (
     <>
        <AppBar position="fixed" style={{"background": "white"}} >
           <Toolbar backgroundColor="white">
-              <Typography
-                  variant="h6"
-                  component="div"
-                  sx={{ flexGrow: 1 }}
-                  backgroundColor="white"
-                  as ="a"
-                  href={"/"}
-              >
+            <Typography
+                variant="h6"
+                component="div"
+                sx={{ flexGrow: 1 }}
+                backgroundColor="white"
+                as ="p"
+            >
+              <Link to="/" > 
                 <StaticImage src="../images/tcs_logo.png" alt="TCS" layout="fixed"height={60}/>
-              </Typography>   
-          </Toolbar>
+              </Link>
+            </Typography> 
+            <Typography sx={{ minWidth: 60 }}><Link to="/all-tags" >Tags</Link></Typography>
+            <Typography sx={{ minWidth: 60 }}><Link to="/all-services">Services</Link></Typography>
+        </Toolbar>
       </AppBar>
-      
-      {/* <header className="global-header">{header}</header> */}
       <div className="global-wrapper" data-is-root-path={isRootPath}>
         <main className="main-container" style={{marginTop : '5rem'}}>{children}</main>
         {/*<footer>
@@ -65,8 +50,7 @@ const Layout = ({ location, title, children }) => {
         >
           <Container maxWidth="sm">
             <Typography variant="body2" color="white" style={{display:"flex", justifyContent:"center" }}>
-              {new Date().getFullYear()}
-              {` All Rights Reserved | `} <Bio />
+              <Bio />
             </Typography>
           </Container>
         </Box>

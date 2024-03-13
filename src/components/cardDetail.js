@@ -8,27 +8,32 @@ import { GatsbyImage, getImage } from "gatsby-plugin-image";
 import Chip from '@mui/material/Chip';
 import CardContent from '@mui/material/CardContent';
 import kebabCase from "lodash/kebabCase"
-import { Link, graphql } from "gatsby"
+import { Link } from "gatsby"
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 const CardDetail = ({ title, desc, detailUrl, demoUrl, postImage, tags, services, date }) => {
+  const theme2 = createTheme();
+  theme2.typography.h5 = {
+    fontSize: '1rem',
+    '@media (min-width:600px)': {
+      fontSize: '1.2rem',
+    },
+    [theme2.breakpoints.up('md')]: {
+      fontSize: '1.3rem',
+    },
+  };
   let featuredImg = getImage(postImage)
   return (
-    <Card sx={{ maxWidth: 345 }}>
-      {/*postImage && <CardMedia
-        component="img"
-        alt="green iguana"
-        image={postImage}
-        
-      />*/}
+    <Card>
       <GatsbyImage image={featuredImg} style={{width:"100%", height: "200px", objectFit: "cover"}} />
       <CardContent>
-        
-        <Typography as="a" href={detailUrl} gutterBottom variant="h5" component="div">
-            {title}
-        </Typography>
+        <ThemeProvider theme={theme2}>
+          <Typography gutterBottom variant="h5" component="div">
+            <Link to={detailUrl} >{title}</Link>
+          </Typography>
+        </ThemeProvider>
         <Typography variant="overline" display="block" gutterBottom>
            {date}
         </Typography>
-        
         <Box sx={{ flexDirection: 'row'}} >
         {tags && tags.map((tag) => {
           return(
@@ -39,7 +44,9 @@ const CardDetail = ({ title, desc, detailUrl, demoUrl, postImage, tags, services
         })}
         {services && services.map((service) => {
           return(
+          <Link to={`/services/${kebabCase(service)}/`}>
             <Chip label={service} color="secondary" size="small" sx = {{mr :0.5, mb:0.5 }} />
+           </Link> 
             )
         })}
         </Box>
@@ -58,14 +65,6 @@ const CardDetail = ({ title, desc, detailUrl, demoUrl, postImage, tags, services
             View Demo
           </MuiLink>
         : null}
-        {/* <MuiLink
-          href={detailUrl}
-          underline="none"
-          variant="body2"
-        >
-          View Detail
-        </MuiLink>
-        */}
       </CardActions>
     </Card>
   );

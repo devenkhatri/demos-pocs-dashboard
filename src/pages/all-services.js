@@ -1,37 +1,46 @@
 import React from "react"
 import PropTypes from "prop-types"
-
+import Layout from "../components/layout"
 // Utilities
 import kebabCase from "lodash/kebabCase"
-
+import {Chip,Container,Box,Typography} from '@mui/material';
 // Components
 import { Link, graphql } from "gatsby"
 
-const TagsPage = ({
-  data: {
-    allMarkdownRemark: { group },
-    site: {
-      siteMetadata: { title },
-    },
-  },
-}) => (
-  <div>
-    <div>
-      <h1>Services</h1>
-      <ul>
-        {group.map(service => (
-          <li key={service.fieldValue}>
-            <Link to={`/services/${kebabCase(service.fieldValue)}/`}>
-              {service.fieldValue} ({service.totalCount})
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </div>
-  </div>
-)
+const ServicesPage = ({
+  data,
+  location
+})=> { 
+    const siteTitle = data.site.siteMetadata.title;
+    const group = data.allMarkdownRemark.group;
+  return(
+  
+     <Layout location={location} title={siteTitle}>
+     <Container>
+        <Box
+          direction="row"
+          justifyContent="center"
+          alignItems="center"
+          spacing={2}
+          className="main_border_box"
+        >
+         <Typography as="h5" gutterBottom variant="h5" component="h5"  sx = {{mt :0}}>
+           Services
+         </Typography>
+             {group.map(service => {
+              return(
+               <Link to={`/services/${kebabCase(service.fieldValue)}/`}>
+                  <Chip label={service.fieldValue} color="secondary"  sx = {{mr :1, mb:1}} />
+                </Link>
+                )
+            })}
+        </Box>    
+    </Container>
+        
+     </Layout >  
+)}
 
-TagsPage.propTypes = {
+ServicesPage.propTypes = {
   data: PropTypes.shape({
     allMarkdownRemark: PropTypes.shape({
       group: PropTypes.arrayOf(
@@ -49,7 +58,7 @@ TagsPage.propTypes = {
   }),
 }
 
-export default TagsPage
+export default ServicesPage
 
 export const pageQuery = graphql`
   query {
