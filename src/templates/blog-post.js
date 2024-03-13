@@ -1,11 +1,12 @@
 import * as React from "react"
 import { Link, graphql } from "gatsby"
 
-import Bio from "../components/bio"
+// import Bio from "../components/bio"
 import Layout from "../components/layout"
 import Seo from "../components/seo"
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
+import {Link as MuiLink} from '@mui/material';
 
 import {
   CardContent,
@@ -13,14 +14,14 @@ import {
   Card,
   Container
 } from '@mui/material';
-import { GatsbyImage, getImage } from "gatsby-plugin-image"
+//import { getImage } from "gatsby-plugin-image"
 
 const BlogPostTemplate = ({
   data: { previous, next, site, markdownRemark: post },
   location,
 }) => {
   const siteTitle = site.siteMetadata?.title || `Title`
-  let featuredImg = getImage(post.frontmatter?.postImage?.childImageSharp?.gatsbyImageData)
+  //let featuredImg = getImage(post.frontmatter?.postImage?.childImageSharp?.gatsbyImageData)
   return (
     <>
       <Layout location={location} title={siteTitle}>
@@ -50,7 +51,14 @@ const BlogPostTemplate = ({
           </Typography>*/}
           {post.frontmatter.demolink ?
             <section >
-              <a href={post.frontmatter.demolink} target="_blank">Demo Link</a>
+              <MuiLink
+                href={post.frontmatter.demolink}
+                target="_blank"
+                underline="none"
+                variant="body2"
+              >
+                View Demo
+              </MuiLink>
             </section>
           : null}
           <Typography variant="body2" color="text.secondary">
@@ -61,9 +69,9 @@ const BlogPostTemplate = ({
             />
           </Typography>
           <hr />
-          <footer>
-            <Bio />
-          </footer>
+         {/* <footer>
+            <Bio /> 
+          </footer>*/}
           <nav className="blog-post-nav">
             <ul
               style={{

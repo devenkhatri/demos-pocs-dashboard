@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import { StaticImage } from "gatsby-plugin-image"
+import Bio from "./bio"
 
 const Layout = ({ location, title, children }) => {
   const rootPath = `${__PATH_PREFIX__}/`
@@ -63,9 +64,9 @@ const Layout = ({ location, title, children }) => {
           }}
         >
           <Container maxWidth="sm">
-            <Typography variant="body2" color="white" style={{display:"flex", justifyContent:"center"}}>
+            <Typography variant="body2" color="white" style={{display:"flex", justifyContent:"center" }}>
               {new Date().getFullYear()}
-              {' All Rights Reserved'}
+              {` All Rights Reserved | `} <Bio />
             </Typography>
           </Container>
         </Box>

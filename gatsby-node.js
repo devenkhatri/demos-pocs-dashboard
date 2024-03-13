@@ -6,10 +6,12 @@
 
 const path = require(`path`)
 const { createFilePath } = require(`gatsby-source-filesystem`)
+const _ = require("lodash")
 
 // Define the template for blog post
 const blogPost = path.resolve(`./src/templates/blog-post.js`)
-
+const tagTemplate = path.resolve("src/templates/tags.js")
+const serviceTemplate = path.resolve("src/templates/services.js")
 /**
  * @type {import('gatsby').GatsbyNode['createPages']}
  */
@@ -27,6 +29,18 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
           }
         }
       }
+      tagsGroup: allMarkdownRemark(limit: 2000) {
+        group(field: { frontmatter: { tags: SELECT }}) {
+          fieldValue
+        }
+      }
+      
+      serviceGroup: allMarkdownRemark(limit: 2000) {
+        group(field: { frontmatter: { services: SELECT }}) {
+          fieldValue
+        }
+      }
+      
     }
   `)
 
@@ -38,6 +52,30 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
     return
   }
 
+  const tags = result.data.tagsGroup.group
+  tags.forEach(tag => {
+    createPage({
+      path: `/tags/${_.kebabCase(tag.fieldValue)}/`,
+      component: tagTemplate,
+      context: {
+        tag: tag.fieldValue,
+      },
+    })
+  })
+  
+  const services = result.data.serviceGroup.group
+  services.forEach(service => {
+    createPage({
+      path: `/services/${_.kebabCase(service.fieldValue)}/`,
+      component: serviceTemplate,
+      context: {
+        service: service.fieldValue,
+      },
+    })
+  })
+  
+  
+  
   const posts = result.data.allMarkdownRemark.nodes
 
   // Create blog posts pages

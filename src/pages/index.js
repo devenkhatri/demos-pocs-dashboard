@@ -19,66 +19,8 @@ import Stack from '@mui/material/Stack';
 import Chip from '@mui/material/Chip';
 import {useState} from "react";
 import { GatsbyImage, getImage } from "gatsby-plugin-image"
-
-const CardDetail = ({ title, desc, detailUrl, demoUrl, postImage, tags, services, date }) => {
-  let featuredImg = getImage(postImage)
-  return (
-    <Card sx={{ maxWidth: 345 }}>
-      {/*postImage && <CardMedia
-        component="img"
-        alt="green iguana"
-        image={postImage}
-        
-      />*/}
-      <GatsbyImage image={featuredImg} style={{width:"100%", height: "200px", objectFit: "cover"}} />
-      <CardContent>
-        
-        <Typography as="a" href={detailUrl} gutterBottom variant="h5" component="div">
-            {title}
-        </Typography>
-        <Typography variant="overline" display="block" gutterBottom>
-           {date}
-        </Typography>
-        
-        <Box sx={{ flexDirection: 'row'}} >
-        {tags && tags.map((tag) => {
-          return(
-            <Chip label={tag} color="primary" size="small" sx = {{mr :0.5, mb:0.5 }} />
-            )
-        })}
-        {services && services.map((service) => {
-          return(
-            <Chip label={service} color="secondary" size="small" sx = {{mr :0.5, mb:0.5 }} />
-            )
-        })}
-        </Box>
-        <Typography variant="body2" color="text.secondary" style={{textAlign: "justify"}}>
-          {desc}
-        </Typography>
-      </CardContent>
-      <CardActions sx={{ justifyContent: 'space-between', float: 'right' }}>
-        {demoUrl?
-          <MuiLink
-            href={demoUrl}
-            target="_blank"
-            underline="none"
-            variant="body2"
-          >
-            View Demo
-          </MuiLink>
-        : null}
-        {/* <MuiLink
-          href={detailUrl}
-          underline="none"
-          variant="body2"
-        >
-          View Detail
-        </MuiLink>
-        */}
-      </CardActions>
-    </Card>
-  );
-}
+import DemoList from "../components/demoList"
+import CardDetail from "../components/cardDetail"
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -126,7 +68,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 const BlogIndex = ({ data, location }) => {
   const siteTitle = data.site.siteMetadata?.title || `Title`
   const posts = data.allMarkdownRemark.nodes;
-  
+  console.log(posts)
   const [searchFilter,setSearchFilter] = useState(posts);
   const setSearchField = (e) =>{
       const keyword = e?.target?.value || ""
@@ -191,11 +133,11 @@ const BlogIndex = ({ data, location }) => {
       <Layout location={location} title={siteTitle}>
       <Container>
         <Box
-  direction="row"
-  justifyContent="center"
-  alignItems="center"
-  spacing={2}
->
+          direction="row"
+          justifyContent="center"
+          alignItems="center"
+          spacing={2}
+        >
         <Typography sx = {{mt :'10px'}} className="custom_total">Total: {searchFilter?.length}</Typography>
         <Search>
           <SearchIconWrapper>
@@ -226,6 +168,8 @@ const BlogIndex = ({ data, location }) => {
           </Typography>
         }
       </Container>
+      
+      <DemoList posts = {posts} />
       </Layout>
     : <Layout location={location} title={siteTitle}>
         <Typography variant="body2" style={{display:"flex", justifyContent:"center", paddingTop : '10rem'}}>
@@ -236,6 +180,7 @@ const BlogIndex = ({ data, location }) => {
         </Typography>
       </Layout>
     }
+    
     </>
   )
 }
